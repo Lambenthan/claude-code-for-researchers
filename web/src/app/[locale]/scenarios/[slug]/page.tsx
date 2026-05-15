@@ -34,6 +34,10 @@ function renderMarkdown(md: string): string {
   return String(result);
 }
 
+// Read at build time so the rewritten <a> hrefs honor basePath on GitHub Pages
+// (and stay empty in local dev).
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 function postProcess(html: string, locale: string): string {
   html = html.replace(
     /<pre><code class="hljs language-(\w+)">/g,
@@ -46,9 +50,10 @@ function postProcess(html: string, locale: string): string {
   html = html.replace(/<h1>.*?<\/h1>\n?/, "");
 
   // Rewrite relative Python file links to the existing /[locale]/sNN learn route.
+  // Prepend basePath so the link works under GitHub Pages' project subpath.
   html = html.replace(
     /href="\.\.\/\.\.\/agents\/s(\d+)_[^"]+\.py"/g,
-    `href="/${locale}/s$1"`
+    `href="${BASE_PATH}/${locale}/s$1"`
   );
 
   return html;
