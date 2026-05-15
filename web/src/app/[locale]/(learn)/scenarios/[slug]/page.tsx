@@ -75,8 +75,14 @@ export default async function ScenarioDetailPage({
 
   const labels =
     locale === "zh"
-      ? { back: "← 返回机制列表", example: "本节贯穿示例", project: "研究项目", whatHappens: "在这一节里做的事" }
-      : { back: "← Back to mechanism list", example: "Running example", project: "Research project", whatHappens: "What happens in this section" };
+      ? { back: "← 返回机制列表", example: "本节贯穿示例", project: "研究项目", whatHappens: "在这一节里做的事", prev: "上一节", next: "下一节" }
+      : { back: "← Back to mechanism list", example: "Running example", project: "Research project", whatHappens: "What happens in this section", prev: "Previous", next: "Next" };
+
+  // Prev/Next neighbors in the scenario sequence (sorted by number, skipping 04).
+  const all = listScenarios();
+  const idx = all.findIndex((s) => s.slug === slug);
+  const prevScenario = idx > 0 ? all[idx - 1] : null;
+  const nextScenario = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
 
   // Render the running-example callout once at the top, then strip its blockquote from the body
   // so it does not appear a second time as a default blockquote.
@@ -140,6 +146,38 @@ export default async function ScenarioDetailPage({
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </article>
+
+      {/* Prev/Next nav */}
+      {(prevScenario || nextScenario) && (
+        <nav className="mt-8 grid grid-cols-1 gap-3 border-t border-[var(--color-border)] pt-6 sm:grid-cols-2">
+          {prevScenario ? (
+            <Link
+              href={`/${locale}/scenarios/${prevScenario.slug}`}
+              className="group flex flex-col gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 transition-colors hover:border-zinc-400 dark:hover:border-zinc-600"
+            >
+              <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-secondary)]">
+                ← {labels.prev}
+              </span>
+              <span className="text-sm font-medium group-hover:underline">
+                {prevScenario.number.padStart(2, "0")} · {prevScenario.title}
+              </span>
+            </Link>
+          ) : <div />}
+          {nextScenario ? (
+            <Link
+              href={`/${locale}/scenarios/${nextScenario.slug}`}
+              className="group flex flex-col gap-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3 text-right transition-colors hover:border-zinc-400 dark:hover:border-zinc-600"
+            >
+              <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-secondary)]">
+                {labels.next} →
+              </span>
+              <span className="text-sm font-medium group-hover:underline">
+                {nextScenario.number.padStart(2, "0")} · {nextScenario.title}
+              </span>
+            </Link>
+          ) : <div />}
+        </nav>
+      )}
     </div>
   );
 }
