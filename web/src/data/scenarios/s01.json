@@ -1,0 +1,51 @@
+{
+  "version": "s01",
+  "title": "主循环",
+  "description": "Claude Code 的循环：模型决定调工具，工具结果回到对话，下一轮模型继续",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "审计全文'因变量'与'被解释变量'的混用情况，输出报告。",
+      "annotation": "用户给出一句审计指令"
+    },
+    {
+      "type": "assistant_text",
+      "content": "我先扫一遍 chapters/ 找到所有出现位置。",
+      "annotation": "模型决定第一步该用什么工具"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -rn '因变量' chapters/",
+      "toolName": "bash",
+      "annotation": "工具调用产生：模型让 bash 帮它扫文件"
+    },
+    {
+      "type": "tool_result",
+      "content": "chapters/ch1.tex:47\nchapters/ch2.tex:118\nchapters/ch3.tex:23 (引用 Hayek 1945 原文)\n... 共 14 处",
+      "toolName": "bash",
+      "annotation": "工具结果回到对话历史，模型在下一轮能看到"
+    },
+    {
+      "type": "assistant_text",
+      "content": "找到 14 处。再扫一遍'被解释变量'的位置做对比。",
+      "annotation": "模型基于工具结果做下一步判断"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -rn '被解释变量' chapters/",
+      "toolName": "bash",
+      "annotation": "再一次工具调用：循环继续"
+    },
+    {
+      "type": "tool_result",
+      "content": "chapters/ch2.tex:42\nchapters/ch4.tex:88\n... 共 6 处",
+      "toolName": "bash",
+      "annotation": "工具结果继续回到对话"
+    },
+    {
+      "type": "assistant_text",
+      "content": "两份清单已汇总到 audit-term.md，由你决定后续如何处理。",
+      "annotation": "模型这一轮没有再调工具——循环退出，控制权回到用户"
+    }
+  ]
+}

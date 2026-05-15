@@ -1,0 +1,76 @@
+{
+  "meta": { "title": "Learn Claude Code", "description": "0 から 1 へ nano Claude Code-like agent を構築し、毎回 1 つの仕組みを追加" },
+  "nav": { "home": "ホーム", "timeline": "12 の能力", "compare": "バージョン比較", "layers": "能力の分類", "github": "GitHub" },
+  "home": { "hero_title": "Learn Claude Code", "hero_subtitle": "計算機専攻でない研究者も、Claude Code の仕組みを直接理解できる。各仕組みをまず平易な言葉で説明し、論文執筆の具体的なシーンで体感する。", "hero_audience": "計算機専攻でない研究者・大学院生・若手研究者向け", "start": "仕組みを 1 つ見る", "start_secondary": "Python 実装を見る", "scenarios_title": "11 の仕組み、それぞれ平易に説明", "scenarios_desc": "各仕組みについて、まず平易な言葉で何をしているか、内部状態がどう変わるかを説明し、その後論文執筆で実際に出会う場面で具体的にたどる。Python を読まなくても追える。", "scenarios_see_all": "11 の仕組みをすべて見る", "scenarios_oneline_label": "ひとことで", "scenarios_anchor_label": "論文執筆で出会う場面", "core_pattern": "すべての仕組みが乗っている土台", "core_pattern_desc": "Claude Code のすべての動作はこのループの上にある：対話をモデルに送る → モデルがツール呼び出しを決める → 実行して結果を返す → モデルが続行を決める。すべての仕組みはこのループへの追加。", "learning_path": "Python を読みたい人へ", "learning_path_desc": "各仕組みに 30〜800 行の最小 Python 再実装がある。仕組みの説明を読んだ後に Python を見ると、内部の動きがはっきりする。Python はオプション、読まなくても理解には影響しない。", "layers_title": "五つの能力", "layers_desc": "ツール、計画、記憶、並行、協調——この五つが組み合わさって、論文プロジェクト内での Claude Code の全行動を構成する。", "loc": "行", "learn_more": "詳細を見る", "versions_in_layer": "バージョン", "message_flow": "実行中の対話履歴の様子", "message_flow_desc": "メインループが 1 周するたびに対話履歴が 1 件増える。これは Claude Code が論文の改訂を進めるときに実際に起きていること。" },
+  "version": { "loc": "行のコード", "tools": "ツール", "new": "新規", "prev": "前のバージョン", "next": "次のバージョン", "view_source": "ソースを見る", "view_diff": "差分を見る", "design_decisions": "設計判断", "whats_new": "新機能", "tutorial": "チュートリアル", "simulator": "エージェントループシミュレーター", "execution_flow": "実行フロー", "architecture": "アーキテクチャ", "concept_viz": "コンセプト可視化", "alternatives": "検討された代替案", "tab_learn": "学習", "tab_simulate": "シミュレーション", "tab_code": "ソースコード", "tab_deep_dive": "詳細分析" },
+  "sim": { "play": "再生", "pause": "一時停止", "step": "ステップ", "reset": "リセット", "speed": "速度", "step_of": "/" },
+  "timeline": { "title": "12 の能力一覧", "subtitle": "Claude Code が論文執筆でできることのすべて。各項目をクリックすると 30 秒の要約と論文執筆シナリオが見られる。", "layer_legend": "種類別", "loc_growth": "対応する Python 実装の行数", "learn_more": "開く" },
+  "layers": {
+    "title": "アーキテクチャ層",
+    "subtitle": "5つの直交する関心事が完全なエージェントを構成",
+    "tools": "エージェントができること。基盤：ツールがモデルに外部世界と対話する能力を与える。",
+    "planning": "作業の組織化。シンプルなToDoリストからエージェント間で共有される依存関係対応タスクボードまで。",
+    "memory": "コンテキスト制限内での記憶保持。圧縮戦略によりエージェントが一貫性を失わずに無限に作業可能。",
+    "concurrency": "ノンブロッキング実行。バックグラウンドスレッドと通知バスによる並列作業。",
+    "collaboration": "マルチエージェント連携。チーム、メッセージング、自律的に考えるチームメイト。"
+  },
+  "compare": {
+    "title": "バージョン比較",
+    "subtitle": "任意の2つのバージョン間の変更を確認",
+    "select_a": "バージョンA",
+    "select_b": "バージョンB",
+    "loc_delta": "コード量の差分",
+    "lines": "行",
+    "new_tools_in_b": "Bの新規ツール",
+    "new_classes_in_b": "Bの新規クラス",
+    "new_functions_in_b": "Bの新規関数",
+    "tool_comparison": "ツール比較",
+    "only_in": "のみ",
+    "shared": "共通",
+    "none": "なし",
+    "source_diff": "ソースコード差分",
+    "empty_hint": "上で2つのバージョンを選択して比較してください。",
+    "architecture": "アーキテクチャ"
+  },
+  "diff": {
+    "new_classes": "新規クラス",
+    "new_tools": "新規ツール",
+    "new_functions": "新規関数",
+    "loc_delta": "コード量の差分"
+  },
+  "sessions": {
+    "s01": "エージェントループ",
+    "s02": "ツール",
+    "s03": "TodoWrite",
+    "s04": "サブエージェント",
+    "s05": "スキル",
+    "s06": "コンテキスト圧縮",
+    "s07": "タスクシステム",
+    "s08": "バックグラウンドタスク",
+    "s09": "エージェントチーム",
+    "s10": "チームプロトコル",
+    "s11": "自律エージェント",
+    "s12": "Worktree + タスク分離"
+  },
+  "layer_labels": {
+    "tools": "ツールと実行",
+    "planning": "計画と調整",
+    "memory": "メモリ管理",
+    "concurrency": "並行処理",
+    "collaboration": "コラボレーション"
+  },
+  "viz": {
+    "s01": "エージェント Whileループ",
+    "s02": "ツールディスパッチマップ",
+    "s03": "TodoWrite リマインドシステム",
+    "s04": "サブエージェント コンテキスト分離",
+    "s05": "オンデマンド スキルローディング",
+    "s06": "3層コンテキスト圧縮",
+    "s07": "タスク依存関係グラフ",
+    "s08": "バックグラウンドタスクレーン",
+    "s09": "エージェントチーム メールボックス",
+    "s10": "FSM チームプロトコル",
+    "s11": "自律エージェントサイクル",
+    "s12": "Worktree タスク分離"
+  }
+}

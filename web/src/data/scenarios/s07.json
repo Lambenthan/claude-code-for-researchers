@@ -1,0 +1,56 @@
+{
+  "version": "s07",
+  "title": "跨会话任务图",
+  "description": "把任务存进 .tasks/ 文件夹，跨会话保留。会话关掉重开任务图还在，依赖关系会自动维护",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "把 phase 2 的实证任务建好图：IV/PSM、机制、异质性、稳健性，依赖关系标好。",
+      "annotation": "phase 2 跨周推进，单会话装不下"
+    },
+    {
+      "type": "tool_call",
+      "content": "{\n  id: \"phase2-iv-finalize\",\n  title: \"do7 IV1+IV2 联合 Hansen J + 弱 IV 检验\",\n  state: \"pending\"\n}",
+      "toolName": "task_create",
+      "annotation": "每条任务一份 JSON 文件落进 .tasks/"
+    },
+    {
+      "type": "tool_call",
+      "content": "{\n  id: \"phase2-mech-myopia\",\n  title: \"do8 Myopia 通道 a+b 段 + Sobel\",\n  state: \"pending\",\n  blocked_by: [\"phase2-iv-finalize\"]\n}",
+      "toolName": "task_create",
+      "annotation": "Myopia 机制必须等 IV 收尾——blocked_by 字段标明依赖"
+    },
+    {
+      "type": "assistant_text",
+      "content": "phase 2 已建 12 个任务。next_actionable() 返回 4 条可立即开始：IV 收尾、PSM 1:1、Placebo 500 次置换、稳健性 PC_A1 替换。",
+      "annotation": "自动维护可执行任务集——依赖未完成的不出现"
+    },
+    {
+      "type": "system_event",
+      "content": "[用户关闭 Claude Code，第二天回来]\n  .tasks/ 文件夹依然在磁盘上",
+      "annotation": "任务图不在内存，落盘后跨会话存活"
+    },
+    {
+      "type": "user_message",
+      "content": "今天接着干。还有哪些 pending？",
+      "annotation": "新会话开启"
+    },
+    {
+      "type": "tool_call",
+      "content": "task_list(state: \"pending\")",
+      "toolName": "task_list",
+      "annotation": "重新扫一遍 .tasks/ 重建内存任务图"
+    },
+    {
+      "type": "tool_result",
+      "content": "状态：completed 3, in_progress 0, blocked 5, pending 4\n推荐：phase2-iv-finalize, phase2-psm, phase2-placebo, phase2-rob-A1",
+      "toolName": "task_list",
+      "annotation": "立刻接住昨天的进度——不需要重新介绍 phase 1 结果"
+    },
+    {
+      "type": "assistant_text",
+      "content": "昨天完成 PSM 1:1（ATE=0.0032, t=3.98***）。今天建议先收 phase2-iv-finalize，它解锁 phase2-mech-myopia 等 3 条。",
+      "annotation": "完成 IV 收尾时依赖图自动传播：Myopia 机制状态从 blocked 切回 pending"
+    }
+  ]
+}

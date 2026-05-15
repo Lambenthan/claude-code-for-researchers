@@ -1,0 +1,63 @@
+{
+  "version": "s08",
+  "title": "后台任务",
+  "description": "慢命令丢后台跑，主对话继续干别的，跑完时结果作为通知插入下一轮对话",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "帮我核这十几条引用是否在 references.bib 里。先把 LaTeX 编译丢后台跑，你继续核引用，编译完了告诉我。",
+      "annotation": "一次编译 90 秒，同步等 10 次就是 15 分钟干等"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -n \"\\\\cite{Hayek1945}\" chapters/",
+      "toolName": "bash",
+      "annotation": "先核一条引用"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -n \"^@.*{Hayek1945,\" references.bib",
+      "toolName": "bash",
+      "annotation": "继续核 bib 条目是否存在"
+    },
+    {
+      "type": "tool_call",
+      "content": "xelatex paper.tex && biber paper && xelatex paper.tex && xelatex paper.tex",
+      "toolName": "bg_run",
+      "annotation": "编译命令进后台，立刻返回任务编号"
+    },
+    {
+      "type": "tool_result",
+      "content": "[bg-7a3f] 已进入后台，预计 90 秒",
+      "toolName": "bg_run",
+      "annotation": "主对话不等结果，继续推进"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -n \"\\\\cite{Friedman1957}\" chapters/",
+      "toolName": "bash",
+      "annotation": "编译在后台跑的同时，Claude 继续核下一条引用"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -n \"\\\\cite{Lucas1976}\" chapters/",
+      "toolName": "bash",
+      "annotation": "再核一条——后台编译还在跑"
+    },
+    {
+      "type": "system_event",
+      "content": "[bg-7a3f] 完成 (exit 0, 用时 87s)\n  PDF 生成成功，page count = 142, 3 个 warning",
+      "annotation": "守护监工检测到进程结束，把结果塞进通知队列"
+    },
+    {
+      "type": "system_event",
+      "content": "[下次模型调用前] 通知队列被读出，作为系统消息加进对话",
+      "annotation": "通知不主动唤醒模型，模型下一轮才看到"
+    },
+    {
+      "type": "assistant_text",
+      "content": "编译成功 142 页，3 个字体相关 warning 建议忽略。已核完 12 条引用，其中 Lucas1976 在正文出现 2 次但 references.bib 里没有该条目。继续核剩下几条。",
+      "annotation": "Claude 看到通知回头处理结果，主对话流没有 90 秒空白"
+    }
+  ]
+}

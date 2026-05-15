@@ -1,0 +1,57 @@
+{
+  "version": "s05",
+  "title": "Skill 按需加载",
+  "description": "装好的 skill 命中场景时才把规则全文调进对话，平时只占索引几行",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "把 07_论文写作 下的'耐心资本'保护词在所有 .tex 里统一一下。",
+      "annotation": "跨文件改写：触发 paper-protect-terminology"
+    },
+    {
+      "type": "system_event",
+      "content": "[Skill 索引扫描]\n  paper-protect-terminology 描述：跨文件改写或术语统一前先列保护清单\n  → 与本指令匹配，建议加载",
+      "annotation": "Skill 索引常驻系统提示词，每条用户消息进来都被对照一遍"
+    },
+    {
+      "type": "tool_call",
+      "content": "load_skill(name: \"paper-protect-terminology\")",
+      "toolName": "load_skill",
+      "annotation": "模型决定加载这条 skill"
+    },
+    {
+      "type": "tool_result",
+      "content": "[SKILL.md 内容注入]\n规则：\n1. 复读 CLAUDE.md 第二节的 14 词保护清单（耐心资本 / 稳定型机构投资者 等）\n2. 扫所有 07_论文写作/ 文件定位每个保护词的实际写法\n3. 列出被替换为禁用同义词的位置\n4. 给用户清单逐处确认后才统一回保护词",
+      "toolName": "load_skill",
+      "annotation": "规则全文以工具结果形式进入对话，模型下一轮看得到"
+    },
+    {
+      "type": "assistant_text",
+      "content": "按 paper-protect-terminology 规则，我先复读 CLAUDE.md 保护清单，再扫所有 .tex 列差异。",
+      "annotation": "模型按 skill 规则走"
+    },
+    {
+      "type": "tool_call",
+      "content": "read CLAUDE.md (第二节保护清单)",
+      "toolName": "read",
+      "annotation": "动手前先复读清单——这一步由 skill 强制要求"
+    },
+    {
+      "type": "tool_result",
+      "content": "保护清单 14 词: 耐心资本 / 稳定型机构投资者 / 战略型机构投资者 / 交易型机构投资者 / 关系型债权 / 机构投资者异质性 / ESG 表现 / 漂绿 / 管理者短视主义 / 双元创新 / 新质生产力 / 全要素生产率 / 融资约束 / 两权分离率",
+      "toolName": "read",
+      "annotation": "清单进入对话，下一步逐词扫"
+    },
+    {
+      "type": "tool_call",
+      "content": "grep -rn '长期资本\\|长线资金\\|长期投资者资金' 07_论文写作/",
+      "toolName": "grep",
+      "annotation": "扫禁用同义词的位置"
+    },
+    {
+      "type": "assistant_text",
+      "content": "扫描完毕：发现 3 处把'耐心资本'替换成'长期资本'，2 处替换成'长线资金'。已写到 audit-protected-terms.md，每处由你确认后我才动手统一。",
+      "annotation": "完成回报。skill 规则只在本会话剩下的轮次里生效"
+    }
+  ]
+}

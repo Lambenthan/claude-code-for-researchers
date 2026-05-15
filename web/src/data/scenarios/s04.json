@@ -1,0 +1,50 @@
+{
+  "version": "s04",
+  "title": "子会话",
+  "description": "派几个子会话独立处理大任务，跑完只回传摘要，主会话上下文不被中间过程填满",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "把 A1/A2/A3/A4/B1/B2/C/D 8 种 PC 测度都跑一遍基准回归，做稳健性矩阵。",
+      "annotation": "大任务，连续做会撑爆主会话工作内存"
+    },
+    {
+      "type": "assistant_text",
+      "content": "我派 8 个子会话各跑一个口径，独立跑，结束后回报系数、t、obs。",
+      "annotation": "模型决定用子会话拆分大任务"
+    },
+    {
+      "type": "tool_call",
+      "content": "spawn_subagent(\n  measure: \"A1\",\n  task: \"用 PC_A1 换手率三分组法对 main_panel.dta 跑 firm+year FE 基准回归\"\n)",
+      "toolName": "task",
+      "annotation": "派出 8 次，每次得到一个任务编号"
+    },
+    {
+      "type": "system_event",
+      "content": "[子会话 #1 启动] 工作内存：空白，工具集：同主会话",
+      "annotation": "每个子会话开一份独立工作内存，与主会话完全隔离"
+    },
+    {
+      "type": "system_event",
+      "content": "[子会话 #1 进行中]\n  Read 02_变量字典/A1 算法说明\n  调 stata-mcp 构造 PC_A1 = 低换手率三分组持股 + 长期负债/总负债\n  reghdfe esg PC_A1 controls, absorb(firm year) cluster(firm)\n  ...产生几千字过程数据，全部封闭在子会话内",
+      "annotation": "中间几千字过程数据不进主会话"
+    },
+    {
+      "type": "tool_result",
+      "content": "子会话 #1 (A1): β=0.0018***, t=3.74, 26874 obs, 3608 firms",
+      "toolName": "task",
+      "annotation": "子会话跑完只把一段总结回传"
+    },
+    {
+      "type": "tool_result",
+      "content": "子会话 #2 (A2 主测度): β=0.0004, t=1.21, 26874 obs\n子会话 #3 (A3): β=0.0007*, t=1.92\n子会话 #4 (A4): β=0.0011**, t=2.34\n... 其余子会话总结陆续回报",
+      "toolName": "task",
+      "annotation": "8 个总结合起来几百字，主会话工作内存几乎不消耗"
+    },
+    {
+      "type": "assistant_text",
+      "content": "8 个 PC 测度跑完，已合成稳健性矩阵表 10A：A1/A3/A4/B2/Bank/Rdebt 显著，A2 主测度当期不显著（与文献 OLS 偏误结果一致，IV 矫正后转显著）。",
+      "annotation": "汇总后继续聊别的任务，主会话工作内存仍有空间"
+    }
+  ]
+}

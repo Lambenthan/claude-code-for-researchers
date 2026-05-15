@@ -1,0 +1,63 @@
+{
+  "version": "s02",
+  "title": "工具调度",
+  "description": "Claude 自己挑该用哪个工具：Read 看文件、Bash 跑命令、Write 落审计报告",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "对一下 chap3.tex 方法部分用的术语和图 3-1 标签是否一致，列出不一致的位置。",
+      "annotation": "一句指令背后涉及读文本、抽 PDF、对照、落报告多类操作"
+    },
+    {
+      "type": "assistant_text",
+      "content": "先读 chap3.tex 的方法部分。",
+      "annotation": "模型自己挑工具——Read 处理文本文件"
+    },
+    {
+      "type": "tool_call",
+      "content": "chapters/chap3.tex",
+      "toolName": "read",
+      "annotation": "代码按工具名'read'查对照表找到处理函数"
+    },
+    {
+      "type": "tool_result",
+      "content": "方法章使用术语：实验组 / 对照组",
+      "toolName": "read",
+      "annotation": "结果回到对话"
+    },
+    {
+      "type": "assistant_text",
+      "content": "图是 PDF，先抽出里面的文字。",
+      "annotation": "图片是 PDF 格式，模型切换工具——Bash 跑 pdftotext"
+    },
+    {
+      "type": "tool_call",
+      "content": "pdftotext figures/fig3-1.pdf -",
+      "toolName": "bash",
+      "annotation": "同一个对照表里的另一个条目：bash → 命令执行函数"
+    },
+    {
+      "type": "tool_result",
+      "content": "图里写的是：前测组 / 后测组",
+      "toolName": "bash",
+      "annotation": "图与正文不一致，下一步是把对照结果写成报告"
+    },
+    {
+      "type": "tool_call",
+      "content": "audit-term.md\n章节正文 vs 图 3-1 标签：\nchap3.tex:142 写'实验组'/ 图写'前测组' ...共 7 处",
+      "toolName": "write",
+      "annotation": "再切换到 write 工具，把不一致清单落成审计报告"
+    },
+    {
+      "type": "tool_result",
+      "content": "audit-term.md 已写入",
+      "toolName": "write",
+      "annotation": "完成"
+    },
+    {
+      "type": "assistant_text",
+      "content": "正文 7 处标签和图 3-1 不一致，清单已写到 audit-term.md，由你决定如何处理。",
+      "annotation": "一次指令触发 read / bash / write 三类工具，全由模型按场景挑选"
+    }
+  ]
+}

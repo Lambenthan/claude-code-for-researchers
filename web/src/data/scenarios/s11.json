@@ -1,0 +1,47 @@
+{
+  "version": "s11",
+  "title": "队友自动认领",
+  "description": "队友在待命时每隔 30 秒看一眼共享任务板，遇到能做的就主动认领，无人值守也持续推进",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "我去睡觉了。4 个队友夜间自治，把稳健性矩阵 13 组按既定 PC 测度换算跑掉，涉及研究判断的等我起来。",
+      "annotation": "夜间无人值守，但队友的循环继续"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-1] 进入待命状态\n  每 30 秒检查 .tasks/ 和 .team/inbox/",
+      "annotation": "待命状态不调模型，只读本地文件——成本接近零"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-1] 扫 .tasks/ → 发现 task #r10A-A1 可做\n  能力匹配：'按指定 PC 测度替换主回归并跑 reghdfe firm+year FE' ✓",
+      "annotation": "队友按自己 identity.md 里声明的能力筛任务"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-1] 尝试认领\n  把 pending-r10A-A1.json 改名为 in_progress-r10A-A1.json\n  成功——其他队友看到状态已是 in_progress 自动跳过",
+      "annotation": "改名是单台电脑上不会被打断的操作，天然避免并发认领冲突"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-1] 进入正常工作循环\n  stata-mcp 跑 reghdfe esg PC_A1 controls, absorb(firm year)\n  → 表 10A 第 1 行: β=0.0018***, t=3.74\n  → state: completed",
+      "annotation": "认领后切到正常 agent loop 模式"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-2] 04:32 认领 #r10A-B2 (PC_B2 替换)\n[robust-runner-1] 04:50 认领 #r10B-lag1 (PC 滞后 1 期)\n... 8 小时内 4 个队友合计完成 13 组",
+      "annotation": "队友各自看板各自接活，没有领导分派"
+    },
+    {
+      "type": "system_event",
+      "content": "[robust-runner-3] 05:15 看到 #r10D-window-2013-2023\n  描述提到'需要决定起始年是否避开 2008 金融危机'\n  → state: blocked, note: '需要用户决定样本窗口'",
+      "annotation": "需要研究判断的任务标 blocked，等用户回来"
+    },
+    {
+      "type": "system_event",
+      "content": "[08:00 用户回来]\n  报告：完成 13 组稳健性回归，全部已落到 06_结果输出/tables_tsv/。blocked 1 条（样本窗口）等决策。",
+      "annotation": "队友夜里处理了机械稳健性回归，研究判断留给白天"
+    }
+  ]
+}

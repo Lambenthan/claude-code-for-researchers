@@ -1,0 +1,48 @@
+{
+  "version": "s10",
+  "title": "团队协议",
+  "description": "通过统一的请求-响应协议处理'关机''方案审批'这类需要双方确认的协调动作",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "评审讨论完了，让方法评审先关机。",
+      "annotation": "队友可能正在写综述，不能直接 kill"
+    },
+    {
+      "type": "tool_call",
+      "content": "shutdown_request(\n  teammate: \"method_reviewer\",\n  request_id: \"req_abc123\"\n)",
+      "toolName": "shutdown_teammate",
+      "annotation": "用 request_id 把这次请求与未来的响应配对"
+    },
+    {
+      "type": "system_event",
+      "content": "[关机协议状态机] req_abc123: pending\n  主对话 → method_reviewer 邮箱:\n  { type: \"shutdown_request\", request_id: \"req_abc123\" }",
+      "annotation": "状态机跟踪每个请求：pending → approved 或 rejected"
+    },
+    {
+      "type": "system_event",
+      "content": "[method_reviewer] 收到关机请求\n  当前任务：空闲\n  决定：同意关机\n  → 主对话邮箱: { type: \"shutdown_response\", request_id: \"req_abc123\", approve: true }",
+      "annotation": "队友自己判断当前是否能关机——同一个 request_id 标记响应"
+    },
+    {
+      "type": "system_event",
+      "content": "[关机协议状态机] req_abc123: approved\n  method_reviewer 线程停止",
+      "annotation": "状态机把请求标记为已批准，对应队友安全退出"
+    },
+    {
+      "type": "user_message",
+      "content": "让 stat_reviewer 提交它要跑的 IV/PSM 方案给我审。",
+      "annotation": "do7_iv_psm 是高风险脚本，方案审批协议处理"
+    },
+    {
+      "type": "system_event",
+      "content": "[方案审批协议] req_xyz789:\n  stat_reviewer → 主对话:\n  { type: \"plan_proposal\", request_id: \"req_xyz789\",\n    content: \"IV1=同行业 PC 均值, IV2=前十大股东之和, PSM 1:1 不放回 + caliper 0.05\" }",
+      "annotation": "不同业务，同一种 request_id + 状态机模式"
+    },
+    {
+      "type": "assistant_text",
+      "content": "method_reviewer 已关机。stat_reviewer 提的 IV/PSM 方案在等你审批，IV2 联合 Hansen J p=0.057 临近阈值，建议复核后回 approve 或 reject。",
+      "annotation": "一套请求-响应协议复用到两类不同协调动作"
+    }
+  ]
+}

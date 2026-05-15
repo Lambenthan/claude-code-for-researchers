@@ -1,0 +1,76 @@
+{
+  "meta": { "title": "Learn Claude Code", "description": "从 0 到 1 构建 nano Claude Code-like agent，每次只加一个机制" },
+  "nav": { "home": "首页", "start": "入门", "timeline": "12 项能力", "compare": "版本对比", "layers": "能力分类", "github": "GitHub" },
+  "home": { "hero_title": "Learn Claude Code", "hero_subtitle": "搞实证但不写代码的人也能直接看懂 Claude Code 是怎么工作的。全部示例围绕一个完整跑通的实证项目'耐心资本对企业 ESG 表现的影响'展开，每个机制对应该项目里的一个具体节点。", "hero_audience": "面向做实证研究的研究生、青年学者，不要求计算机背景", "start": "看一个机制", "start_secondary": "看 Python 复刻", "scenarios_title": "11 个机制，挨个讲清楚", "scenarios_desc": "每个机制都用大白话先讲清楚它在做什么、内部状态怎么变。再用耐心资本 → ESG 项目里的一个具体节点（如 8 种 PC 测度并行回归、do0–do10 任务图、稳健性矩阵夜间自治）让你看见它在做的事。", "scenarios_see_all": "查看全部 11 个机制", "scenarios_oneline_label": "一句话讲清楚", "scenarios_anchor_label": "在实证项目里碰到它", "core_pattern": "这些机制共同的底座", "core_pattern_desc": "所有 Claude Code 的行为都建立在下面这一段循环上：把对话发给模型 → 模型决定要不要调工具 → 调了就执行、把结果回传 → 模型决定还要不要继续。一切机制都是这个循环上面的加法。", "learning_path": "想看 Python 怎么写的", "learning_path_desc": "每个机制配了一份 30 到 800 行的最小 Python 复刻。读完上面的机制再回头读 Python，能看清它内部在做什么。Python 是可选项，不读不影响你理解机制。", "layers_title": "五种能力", "layers_desc": "工具、规划、记忆、并发、协作——这五种能力组合成 Claude Code 在你实证项目里的全部行为。", "loc": "行", "learn_more": "了解更多", "versions_in_layer": "个版本", "message_flow": "对话历史在跑的时候长什么样", "message_flow_desc": "主循环每跑一轮，对话历史就增长一条。Claude Code 跟你来回推进实证项目时，对话历史就是这样一步步累积的。", "case_label": "贯穿案例", "case_title": "耐心资本对企业 ESG 表现的影响", "case_subtitle": "中国 A 股 · 2009-2023 · 26874 公司-年度观测 · 3608 家公司", "case_body": "本指南所有机制演示都取自这个项目里的一个具体节点。整条链路从 do0_setup → do10_robust 11 个 Stata 脚本、phase 1 跑出 main_panel.dta 与 5 张基准表、phase 2 把 IV/PSM、机制、异质性、稳健性矩阵全跑完。每个动画对应这条链路里的某一步。", "case_pillars": [["主测度", "A2 框架·稳定型股权+关系型债权"], ["被解释变量", "华证 ESG·连续 0-1 标准化"], ["内生性矫正", "IV1 行业均值·IV2 前十大股东·IV3 PC 滞后"], ["稳健性", "8 种 PC 测度·E/S/G 分项·5 个子样本"]] },
+  "version": { "loc": "行代码", "tools": "个工具", "new": "新增", "prev": "上一版", "next": "下一版", "view_source": "查看源码", "view_diff": "查看变更", "design_decisions": "设计决策", "whats_new": "新增内容", "tutorial": "教程", "simulator": "Agent 循环模拟器", "execution_flow": "执行流程", "architecture": "架构", "concept_viz": "概念可视化", "alternatives": "替代方案", "tab_learn": "学习", "tab_simulate": "模拟", "tab_code": "源码", "tab_deep_dive": "深入探索" },
+  "sim": { "play": "播放", "pause": "暂停", "step": "单步", "reset": "重置", "speed": "速度", "step_of": "/" },
+  "timeline": { "title": "12 项能力一览", "subtitle": "Claude Code 在论文写作里的全部能力。点开任一条进入 30 秒导读和论文场景。", "layer_legend": "按类别分组", "loc_growth": "对应 Python 复刻的代码量", "learn_more": "进入" },
+  "layers": {
+    "title": "架构层次",
+    "subtitle": "五个正交关注点组合成完整的 Agent",
+    "tools": "Agent 能做什么。基础层：工具赋予模型与外部世界交互的能力。",
+    "planning": "如何组织工作。从简单的待办列表到跨 Agent 共享的依赖感知任务板。",
+    "memory": "在上下文限制内保持记忆。压缩策略让 Agent 可以无限工作而不失去连贯性。",
+    "concurrency": "非阻塞执行。后台线程和通知总线实现并行工作。",
+    "collaboration": "多 Agent 协作。团队、消息传递和能独立思考的自主队友。"
+  },
+  "compare": {
+    "title": "版本对比",
+    "subtitle": "查看任意两个版本之间的变化",
+    "select_a": "版本 A",
+    "select_b": "版本 B",
+    "loc_delta": "代码量差异",
+    "lines": "行",
+    "new_tools_in_b": "B 中新增工具",
+    "new_classes_in_b": "B 中新增类",
+    "new_functions_in_b": "B 中新增函数",
+    "tool_comparison": "工具对比",
+    "only_in": "仅在",
+    "shared": "共有",
+    "none": "无",
+    "source_diff": "源码差异",
+    "empty_hint": "请在上方选择两个版本进行对比。",
+    "architecture": "架构"
+  },
+  "diff": {
+    "new_classes": "新增类",
+    "new_tools": "新增工具",
+    "new_functions": "新增函数",
+    "loc_delta": "代码量差异"
+  },
+  "sessions": {
+    "s01": "Agent Loop",
+    "s02": "Tool Use",
+    "s03": "TodoWrite",
+    "s04": "Subagent",
+    "s05": "Skills",
+    "s06": "Context Compact",
+    "s07": "Task System",
+    "s08": "Background Tasks",
+    "s09": "Agent Teams",
+    "s10": "Team Protocols",
+    "s11": "Autonomous Agents",
+    "s12": "Worktree + Task Isolation"
+  },
+  "layer_labels": {
+    "tools": "工具与执行",
+    "planning": "规划与协调",
+    "memory": "记忆管理",
+    "concurrency": "并发",
+    "collaboration": "协作"
+  },
+  "viz": {
+    "s01": "主循环",
+    "s02": "工具调度对照表",
+    "s03": "待办清单与提醒系统",
+    "s04": "子会话上下文隔离",
+    "s05": "Skill 按需加载",
+    "s06": "三层上下文压缩",
+    "s07": "任务依赖图",
+    "s08": "后台任务通道",
+    "s09": "评审小组邮箱",
+    "s10": "团队协议有限状态机",
+    "s11": "队友自治循环",
+    "s12": "工作树任务隔离"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "version": "s09",
+  "title": "多 agent 协作",
+  "description": "几个常驻队友通过共享邮箱互相发消息，模拟评审小组、跨学科咨询这类多视角讨论场景",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "建一个 4 人评审小组：method、stat、writing、novelty。读完 07_论文写作/main.tex 互相讨论，给我综合意见。",
+      "annotation": "投稿前模拟评审：需要多视角、互相回应"
+    },
+    {
+      "type": "tool_call",
+      "content": "team_create(members: [method_reviewer, stat_reviewer, writing_reviewer, novelty_reviewer])",
+      "toolName": "team_create",
+      "annotation": "每个队友在 .team/<name>/ 建一个独立目录，含自己的人设和邮箱"
+    },
+    {
+      "type": "system_event",
+      "content": "[4 个队友启动] 每个有自己的人设、对话历史、独立工作目录",
+      "annotation": "队友是常驻的，跟子会话的一次性不一样"
+    },
+    {
+      "type": "system_event",
+      "content": "[method_reviewer] Read 07_论文写作/main.tex → 写意见",
+      "annotation": "各队友各自读完论文，独立形成意见"
+    },
+    {
+      "type": "system_event",
+      "content": "[method_reviewer] → 邮箱广播:\n  '识别策略主要靠 firm+year FE + IV，建议补 PC 滞后期作为 IV3，并加 Dickinson 生命周期工具变量。@stat 你怎么看？'",
+      "annotation": "通过共享邮箱发消息，所有队友可读"
+    },
+    {
+      "type": "system_event",
+      "content": "[stat_reviewer] 读邮箱 → 看到 method 的消息 → 回应:\n  '同意 IV3 加进去。另外 PSM 后再 reghdfe β 掉到 0.0004（vs IV 0.0052），效应可能主要在 firm 横截面，建议正文里讨论这条不对称。'",
+      "annotation": "队友能互相看见、互相回应——子会话做不到这件事"
+    },
+    {
+      "type": "system_event",
+      "content": "[novelty_reviewer] 看到 writing 的章节意见后调整自己的建议:\n  '相对唐亮 2025 的边际贡献集中在 PC_A2 主测度 + Myopia 机制（H3d）+ 绿色金融试验区异质性，这三点放在第一章贡献小节即可，不必改第三章。'",
+      "annotation": "意见交叉影响——评审讨论里常见的动态"
+    },
+    {
+      "type": "assistant_text",
+      "content": "4 位评审讨论 35 分钟后给出综合意见 47 条，按优先级排好。讨论历史保留在 .team/inbox/，后续 v2 准备好再来时可以继续讨论。",
+      "annotation": "队友常驻，下一轮 v2 准备好再来时还能接着用"
+    }
+  ]
+}

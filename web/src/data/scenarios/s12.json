@@ -1,0 +1,56 @@
+{
+  "version": "s12",
+  "title": "工作树隔离",
+  "description": "稳健性同时维护多个版本时，每个版本放进独立的 git 工作目录，几个 agent 同时维护各版本不冲突",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "要并行维护三个稳健性版本：ESG 0-1 主测度（主）、AAA-CCC 评级版（替换 BeS）、E/S/G 三分项版（拆解 BeS）。三个版本核心数据相同，只替换被解释变量。",
+      "annotation": "三个版本核心数据相同，只是 ESG 测度替换或拆解"
+    },
+    {
+      "type": "tool_call",
+      "content": "git worktree add ../pc-esg-main submission/main\ngit worktree add ../pc-esg-discrete submission/discrete\ngit worktree add ../pc-esg-subscores submission/subscores",
+      "toolName": "bash",
+      "annotation": "用 git 的多目录机制建三个独立工作目录，共享同一份 git 历史"
+    },
+    {
+      "type": "tool_call",
+      "content": "task_create(\n  id: tk-201,\n  title: '主测度版：跑 do6_baseline (ESG 连续 0-1)',\n  worktree: '../pc-esg-main'\n)",
+      "toolName": "task_create",
+      "annotation": "任务用 worktree 字段绑定到具体目录"
+    },
+    {
+      "type": "system_event",
+      "content": "[agent-A 启动] cwd = ../pc-esg-main\n[agent-B 启动] cwd = ../pc-esg-discrete\n[agent-C 启动] cwd = ../pc-esg-subscores",
+      "annotation": "每个 agent 切到自己绑定的工作目录"
+    },
+    {
+      "type": "system_event",
+      "content": "[agent-A] do6_baseline.do 用 ESG 连续 0-1\n[agent-B] do6_baseline.do 用 ESG_rating 1-9\n[agent-C] do6_baseline.do 拆 E_score / S_score / G_score",
+      "annotation": "三个 agent 各自跑各自目录里的 do6 修改与回归任务，物理隔离不冲突"
+    },
+    {
+      "type": "user_message",
+      "content": "刚发现 ch3 表 4-2 的均值算错了，三个版本都要同步。",
+      "annotation": "核心数据修正需要跨版本同步"
+    },
+    {
+      "type": "tool_call",
+      "content": "cd pc-esg && [修正 do4_panel_assemble.do 缩尾边界] && git commit -am 'fix: winsor boundary in panel assemble'",
+      "toolName": "bash",
+      "annotation": "主目录修正一处，commit 到主分支"
+    },
+    {
+      "type": "tool_call",
+      "content": "cd ../pc-esg-main && git pull --rebase origin main\ncd ../pc-esg-discrete && git pull --rebase origin main\ncd ../pc-esg-subscores && git pull --rebase origin main",
+      "toolName": "bash",
+      "annotation": "三个 worktree 各自把主分支的修正 rebase 进来"
+    },
+    {
+      "type": "assistant_text",
+      "content": "三个版本都已同步数据修正。主测度版编译通过、离散评级版 β=0.0120***、E/S/G 三分项版 E_score 显著 S/G 不显著——三件工作仍在各自目录里并行推进。",
+      "annotation": "核心数据修正一处改、git 自动合并到三个版本——多版本管理成本很低"
+    }
+  ]
+}

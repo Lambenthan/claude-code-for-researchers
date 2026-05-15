@@ -1,0 +1,53 @@
+{
+  "version": "s06",
+  "title": "上下文压缩",
+  "description": "工作内存接近上限时自动把前段对话压成摘要，腾出空间继续后面的对话",
+  "steps": [
+    {
+      "type": "user_message",
+      "content": "继续核第二章里的数据和引用。",
+      "annotation": "已经讨论了 2 个小时，工作内存占用 71%"
+    },
+    {
+      "type": "assistant_text",
+      "content": "好，继续。",
+      "annotation": "正常推进核稿"
+    },
+    {
+      "type": "tool_call",
+      "content": "chapters/ch2.tex",
+      "toolName": "read",
+      "annotation": "读完一个 1500 行的文件，又增加几千字到对话历史"
+    },
+    {
+      "type": "system_event",
+      "content": "[Microcompact] 把刚才那条 read 结果里没引用的 1300 行替换为占位\n  原始 12000 字 → 压缩后 800 字",
+      "annotation": "最细的压缩：单条工具结果级别，每轮自动跑"
+    },
+    {
+      "type": "system_event",
+      "content": "[Token 监控] 当前用量 165k / 200k (83%) — 触发 auto-compact",
+      "annotation": "工作内存接近上限，触发中间一层压缩"
+    },
+    {
+      "type": "system_event",
+      "content": "[Auto-compact 开始]\n  打包最早的 30 条消息\n  额外调一次模型生成摘要\n  → '术语锁定：被解释变量；引用核查：已完成 ch1 38 条；ch2 进行中 § 3 ...'\n  摘要约 600 字，替换原来 30 条消息（约 8 万字）",
+      "annotation": "中间层压缩：保留关键约定，丢弃过程细节"
+    },
+    {
+      "type": "system_event",
+      "content": "[Token 监控] 压缩后 88k / 200k (44%)",
+      "annotation": "工作内存用量降回去一半，对话继续"
+    },
+    {
+      "type": "user_message",
+      "content": "我们最开始定的'被解释变量'术语锁定规则是什么？",
+      "annotation": "测试一下：压缩后能不能回忆早期约定"
+    },
+    {
+      "type": "assistant_text",
+      "content": "你设定的规则是全文术语审计统一用'被解释变量'作为锁定写法，引用 Hayek 1945 和 Friedman 1957 两处原文保留'因变量'不动。这条规则在压缩摘要里保留了。",
+      "annotation": "关键约定被压缩摘要保留——会话语义连续"
+    }
+  ]
+}
