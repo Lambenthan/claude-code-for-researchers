@@ -87,7 +87,7 @@ The "one in_progress at a time" constraint forces sequential focus. The nag remi
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s03_todo_write.py
 ```
 

@@ -167,8 +167,8 @@ npm run dev   # http://localhost:3000
 If you want to read the underlying Python re-implementations of each mechanism — 30 to 800 lines each, side-by-side with the scenarios — they live under `agents/`:
 
 ```sh
-git clone https://github.com/Lambenthan/learn-claude-code
-cd learn-claude-code
+git clone https://github.com/Lambenthan/claude-code-for-researchers
+cd claude-code-for-researchers
 pip install -r requirements.txt
 cp .env.example .env   # Edit .env with your ANTHROPIC_API_KEY
 
@@ -216,7 +216,7 @@ s08  Background Tasks        [6]     s10  Team Protocols          [12]
 ## Architecture
 
 ```
-learn-claude-code/
+claude-code-for-researchers/
 |
 |-- scenarios/                     # 11 paper-writing scenarios mapped to mechanisms
 |-- agents/                        # Python reference implementations (s01-s12 + s_full)

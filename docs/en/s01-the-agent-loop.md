@@ -106,7 +106,7 @@ That's the entire agent in under 30 lines. Everything else in this course layers
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s01_agent_loop.py
 ```
 

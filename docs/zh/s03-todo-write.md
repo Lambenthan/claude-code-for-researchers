@@ -87,7 +87,7 @@ if rounds_since_todo >= 3 and messages:
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s03_todo_write.py
 ```
 

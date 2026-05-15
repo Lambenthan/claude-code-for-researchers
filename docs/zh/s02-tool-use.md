@@ -89,7 +89,7 @@ for block in response.content:
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s02_tool_use.py
 ```
 

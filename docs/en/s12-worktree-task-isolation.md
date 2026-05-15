@@ -110,7 +110,7 @@ After a crash, state reconstructs from `.tasks/` + `.worktrees/index.json` on di
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s12_worktree_task_isolation.py
 ```
 

@@ -98,7 +98,7 @@ The loop stays single-threaded. Only subprocess I/O is parallelized.
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s08_background_tasks.py
 ```
 

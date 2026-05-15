@@ -131,7 +131,7 @@ if len(messages) <= 3:
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s11_autonomous_agents.py
 ```
 

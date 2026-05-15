@@ -115,7 +115,7 @@ Transcripts preserve full history on disk. Nothing is truly lost -- just moved o
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s06_context_compact.py
 ```
 

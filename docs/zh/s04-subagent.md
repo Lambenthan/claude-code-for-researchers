@@ -85,7 +85,7 @@ Subagent 可能跑了 30+ 次工具调用, 但整个消息历史直接丢弃。�
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s04_subagent.py
 ```
 

@@ -121,7 +121,7 @@ TOOL_HANDLERS = {
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s07_task_system.py
 ```
 

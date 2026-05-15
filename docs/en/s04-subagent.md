@@ -85,7 +85,7 @@ The child's entire message history (possibly 30+ tool calls) is discarded. The p
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s04_subagent.py
 ```
 

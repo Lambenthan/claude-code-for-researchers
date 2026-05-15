@@ -95,7 +95,7 @@ One FSM, two applications. The same `pending -> approved | rejected` state machi
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s10_team_protocols.py
 ```
 

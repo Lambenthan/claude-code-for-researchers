@@ -110,7 +110,7 @@ def remove(self, name, force=False, complete_task=False):
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s12_worktree_task_isolation.py
 ```
 

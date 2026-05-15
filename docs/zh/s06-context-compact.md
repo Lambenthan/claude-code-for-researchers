@@ -115,7 +115,7 @@ def agent_loop(messages: list):
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s06_context_compact.py
 ```
 

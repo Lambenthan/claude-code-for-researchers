@@ -98,7 +98,7 @@ The model learns what skills exist (cheap) and loads them when relevant (expensi
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s05_skill_loading.py
 ```
 

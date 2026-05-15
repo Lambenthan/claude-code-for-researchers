@@ -114,7 +114,7 @@ def _teammate_loop(self, name, role, prompt):
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s09_agent_teams.py
 ```
 

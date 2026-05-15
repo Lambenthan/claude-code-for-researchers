@@ -89,7 +89,7 @@ Add a tool = add a handler + add a schema entry. The loop never changes.
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s02_tool_use.py
 ```
 

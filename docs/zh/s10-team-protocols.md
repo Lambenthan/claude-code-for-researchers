@@ -95,7 +95,7 @@ def handle_plan_review(request_id, approve, feedback=""):
 ## 试一试
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s10_team_protocols.py
 ```
 

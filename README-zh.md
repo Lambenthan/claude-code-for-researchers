@@ -167,8 +167,8 @@ npm run dev   # http://localhost:3000
 愿意往下读一层的，每个机制都配了 30 到 800 行的 Python 最小复刻，放在 `agents/` 下，跟场景对照着读：
 
 ```sh
-git clone https://github.com/Lambenthan/learn-claude-code
-cd learn-claude-code
+git clone https://github.com/Lambenthan/claude-code-for-researchers
+cd claude-code-for-researchers
 pip install -r requirements.txt
 cp .env.example .env   # 编辑 .env 填 ANTHROPIC_API_KEY
 
@@ -216,7 +216,7 @@ s08  后台任务                [6]      s10  团队协议                [12]
 ## 项目结构
 
 ```
-learn-claude-code/
+claude-code-for-researchers/
 |
 |-- scenarios/                     # 11 个论文写作场景，对应各机制
 |-- agents/                        # Python 参考实现 (s01-s12 + s_full 总纲)

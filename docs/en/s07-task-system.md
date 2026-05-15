@@ -121,7 +121,7 @@ From s07 onward, the task graph is the default for multi-step work. s03's Todo r
 ## Try It
 
 ```sh
-cd learn-claude-code
+cd claude-code-for-researchers
 python agents/s07_task_system.py
 ```
 
