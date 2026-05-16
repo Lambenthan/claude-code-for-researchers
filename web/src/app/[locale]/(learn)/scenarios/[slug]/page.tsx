@@ -7,7 +7,8 @@ import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
-import { listScenarios, getScenario } from "@/lib/scenarios";
+import { listScenarios, getScenario, getReplay } from "@/lib/scenarios";
+import { ReplayPlayer, type ReplayLabels } from "@/components/scenarios/replay-player";
 
 const locales = ["en", "zh"];
 
@@ -78,6 +79,48 @@ export default async function ScenarioDetailPage({
       ? { back: "← 返回机制列表", example: "本节贯穿示例", project: "研究项目", whatHappens: "在这一节里做的事", prev: "上一节", next: "下一节" }
       : { back: "← Back to mechanism list", example: "Running example", project: "Research project", whatHappens: "What happens in this section", prev: "Previous", next: "Next" };
 
+  const replayLabels: ReplayLabels =
+    locale === "zh"
+      ? {
+          title: "真实运行回放",
+          subtitle: "按播放或单步推进，看 Claude Code 在这一节里逐轮做的事",
+          reset: "重置到第一步",
+          prev: "上一步",
+          next: "下一步",
+          play: "自动播放",
+          pause: "暂停",
+          speed: "速度",
+          step: "步",
+          roleUser: "user",
+          roleAssistant: "assistant",
+          roleToolUse: "tool 调用",
+          roleToolResult: "tool 结果",
+          roleThinking: "thinking",
+          roleNote: "旁白",
+          roleStop: "stop",
+        }
+      : {
+          title: "Real-run replay",
+          subtitle:
+            "Play or step through what Claude Code did, turn by turn, in this scenario",
+          reset: "Reset to first step",
+          prev: "Previous step",
+          next: "Next step",
+          play: "Auto play",
+          pause: "Pause",
+          speed: "Speed",
+          step: "Step",
+          roleUser: "user",
+          roleAssistant: "assistant",
+          roleToolUse: "tool call",
+          roleToolResult: "tool result",
+          roleThinking: "thinking",
+          roleNote: "note",
+          roleStop: "stop",
+        };
+
+  const replay = getReplay(slug);
+
   // Prev/Next neighbors in the scenario sequence (sorted by number, skipping 04).
   const all = listScenarios();
   const idx = all.findIndex((s) => s.slug === slug);
@@ -138,6 +181,10 @@ export default async function ScenarioDetailPage({
             )}
           </div>
         </aside>
+      )}
+
+      {replay && (
+        <ReplayPlayer steps={replay.steps} labels={replayLabels} />
       )}
 
       <article>
