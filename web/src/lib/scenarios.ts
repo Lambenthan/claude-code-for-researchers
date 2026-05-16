@@ -18,37 +18,6 @@ export interface Scenario extends ScenarioMeta {
   content: string;
 }
 
-export interface ReplayStep {
-  step: number;
-  role:
-    | "user"
-    | "assistant"
-    | "tool_use"
-    | "tool_result"
-    | "thinking"
-    | "note"
-    | "stop";
-  /** Optional timestamp tag (used by background-task / autonomous scenarios). */
-  t?: string;
-  /** Body text for user / assistant / thinking / note. */
-  text?: string;
-  /** Tool name (when role === "tool_use"). */
-  tool?: string;
-  /** Brief argument summary (when role === "tool_use"). */
-  args?: string;
-  /** Tool result summary (when role === "tool_result"). */
-  result?: string;
-  /** Stop reason (when role === "stop"). */
-  reason?: string;
-  /** Optional agent identity for multi-agent scenarios (main / sub-N / runner-1 / method_reviewer / …). */
-  agent?: string;
-}
-
-export interface Replay {
-  slug: string;
-  steps: ReplayStep[];
-}
-
 function parseScenarioMeta(slug: string, md: string): ScenarioMeta {
   const titleMatch = md.match(/^#\s+(.+)$/m);
   const fullTitle = titleMatch ? titleMatch[1].trim() : slug;
@@ -118,22 +87,4 @@ export function getScenarioByVersion(version: string): ScenarioMeta | null {
   const scenarios = listScenarios();
   const needle = `/${version}_`;
   return scenarios.find((s) => s.pythonRef.includes(needle)) ?? null;
-}
-
-export function getReplay(slug: string): Replay | null {
-  const replayPath = path.join(SCENARIOS_DIR, slug, "replay.jsonl");
-  if (!fs.existsSync(replayPath)) return null;
-  const raw = fs.readFileSync(replayPath, "utf-8");
-  const steps: ReplayStep[] = [];
-  for (const line of raw.split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-    try {
-      const parsed = JSON.parse(trimmed) as ReplayStep;
-      steps.push(parsed);
-    } catch {
-      // Silently skip malformed lines so a single broken row doesn't bring down the page.
-    }
-  }
-  return steps.length ? { slug, steps } : null;
 }

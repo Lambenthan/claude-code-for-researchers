@@ -6,32 +6,29 @@
 
 ## 怎么用这个目录
 
-每一节是一个独立文件夹，含两份内容：
+每一节是一个独立文件夹，里面至少有一份 `scenario.md`。这一份是给你看的主内容。如果配了 `replay.jsonl`，那是 Claude Code 跑这个任务时的对话回放，将来 web/ 平台会把它做成可暂停的动画演示。
 
-- `scenario.md` — 给你看的主内容，含真实运行节点的工具调用轮次、关键 output 摘要、决策点串联
-- `replay.jsonl` — 机器可解析的对话回放，每行一个 step（含 role / tool / args / result / agent / 时间戳），用来在 web 端做可暂停的动画演示
-
-直接阅读 `scenario.md` 就够了。`replay.jsonl` 跟 scenario.md 节点表完全一致，进入 [/zh/scenarios/<slug>](https://lambenthan.github.io/claude-code-for-researchers/zh/scenarios) 页面后顶部的 Replay 卡片会逐步播放它。
+直接阅读 `scenario.md` 就够了。
 
 ## 当前进度
 
-本指南全部场景以一个完整跑通的实证项目"耐心资本对企业 ESG 表现的影响"作为贯穿案例，每个机制都嵌入了 2026-05-10 那次 do0–do10 实际跑出来的工具调用序列与关键数字（PC（A2 主） β=0.0004 不显著、PC（A1） β=0.0018***、IV1 β=0.0052**、PSM ATE 0.0032***、Placebo p_perm=0.000、表 10A 七套 PC 测度系数等），不是教学示意。
+本指南全部场景以一个完整跑通的实证项目"耐心资本对企业 ESG 表现的影响"作为贯穿案例，11 个机制每个对应该项目里的一个具体节点：
 
-| 编号 | 机制 | 真实运行节点 | 文件 |
+| 编号 | 机制 | 场景 | 文件 |
 |:---|:---|:---|:---|
-| 01 | Agent loop | 按 CLAUDE.md 第二节 14 词保护清单审计 docs/ 与 06_结果输出/tables_tsv/——9 轮循环 | [scenario](01-cross-chapter-term-unification/scenario.md) · [replay](01-cross-chapter-term-unification/replay.jsonl) |
-| 02 | Tool dispatch | 02 字典 ↔ do4 构造代码 ↔ do6/do10 引用三方核对——Read / stata-mcp / Grep / Write 6 轮 | [scenario](02-claude-picks-tools/scenario.md) · [replay](02-claude-picks-tools/replay.jsonl) |
-| 03 | TodoWrite | phase 1 do0_setup → do6_baseline 七脚本顺序推进，主面板 76305 → 26441 obs | [scenario](03-advisor-revisions-todo/scenario.md) · [replay](03-advisor-revisions-todo/replay.jsonl) |
-| 05 | Skill loading | paper-backup-before-word 在 phase 2 合表入 docx 前命中加载，落 28.9KB 含 12 张原生三线表 | [scenario](05-skill-auto-backup/scenario.md) · [replay](05-skill-auto-backup/replay.jsonl) |
-| 06 | Context compact | phase 1 三小时会话 17 万字压缩为 600 字摘要保留主口径决策与五张表系数 | [scenario](06-context-compact-third-chapter/scenario.md) · [replay](06-context-compact-third-chapter/replay.jsonl) |
-| 07 | Task system | phase 2 任务图：do7 → do8/do9/do10 依赖关系，blocked_by 与 next_actionable() 演化 | [scenario](07-task-system-persistent-revisions/scenario.md) · [replay](07-task-system-persistent-revisions/replay.jsonl) |
-| 08 | Background tasks | Placebo 500 次置换后台跑 7 分钟，主对话同时整理 do9 异质性 8 列汇总 | [scenario](08-background-latex-compile/scenario.md) · [replay](08-background-latex-compile/replay.jsonl) |
-| 09 | Agent teams | 方法学 / 计量 / 写作 / 新意四审稿人针对 OLS 与 IV 系数差 10 倍的事实 7 条消息交叉评审 | [scenario](09-peer-review-rehearsal/scenario.md) · [replay](09-peer-review-rehearsal/replay.jsonl) |
-| 10 | Subagent | 表 10A 七种 PC 测度并行：A2 主 / A1 / B2 / C / 仅股权 / 仅 Bank / 仅 Rdebt | [scenario](10-parallel-citation-audit/scenario.md) · [replay](10-parallel-citation-audit/replay.jsonl) |
-| 11 | Autonomous agents | 夜间两个稳健性 runner 自治认领 18 条任务（表 10A 7 + 10B 6 + 10C 5），50 分钟跑完 | [scenario](11-autonomous-night-claim/scenario.md) · [replay](11-autonomous-night-claim/replay.jsonl) |
-| 12 | Worktree isolation | pc-esg 主测度 0-1 / pc-esg-discrete 评级 1-9 / pc-esg-subscores E/S/G 三个 worktree 并行 | [scenario](12-worktree-multi-submission/scenario.md) · [replay](12-worktree-multi-submission/replay.jsonl) |
+| 01 | Agent loop | 按 CLAUDE.md 保护清单审计论文术语 | [scenario](01-cross-chapter-term-unification/scenario.md) · [replay](01-cross-chapter-term-unification/replay.jsonl) |
+| 02 | Tool dispatch | 变量字典与 Stata 字段一致性核对 | [scenario](02-claude-picks-tools/scenario.md) · [replay](02-claude-picks-tools/replay.jsonl) |
+| 03 | TodoWrite | do0–do6 七个脚本按依赖顺序推进 | [scenario](03-advisor-revisions-todo/scenario.md) · [replay](03-advisor-revisions-todo/replay.jsonl) |
+| 05 | Skill loading | paper-protect-terminology 跨文件加载 | [scenario](05-skill-auto-backup/scenario.md) · [replay](05-skill-auto-backup/replay.jsonl) |
+| 06 | Context compact | phase 1 长会话压缩，保留 PC_A2 主测度等关键决定 | [scenario](06-context-compact-third-chapter/scenario.md) · [replay](06-context-compact-third-chapter/replay.jsonl) |
+| 07 | Task system | phase 2 任务图跨会话保留 | [scenario](07-task-system-persistent-revisions/scenario.md) · [replay](07-task-system-persistent-revisions/replay.jsonl) |
+| 08 | Background tasks | Placebo 500 次置换 + Bootstrap 中介后台跑 | [scenario](08-background-latex-compile/scenario.md) · [replay](08-background-latex-compile/replay.jsonl) |
+| 09 | Agent teams | 4 人评审小组讨论 main.tex v2 | [scenario](09-peer-review-rehearsal/scenario.md) · [replay](09-peer-review-rehearsal/replay.jsonl) |
+| 10 | Subagent | 8 种 PC 测度并行回归 | [scenario](10-parallel-citation-audit/scenario.md) · [replay](10-parallel-citation-audit/replay.jsonl) |
+| 11 | Autonomous agents | 夜间自治跑稳健性矩阵 13 组 | [scenario](11-autonomous-night-claim/scenario.md) · [replay](11-autonomous-night-claim/replay.jsonl) |
+| 12 | Worktree isolation | 主测度版 / 离散评级版 / 三分项版 三个 worktree | [scenario](12-worktree-multi-submission/scenario.md) · [replay](12-worktree-multi-submission/replay.jsonl) |
 
-11 个场景全部完成。每节按"机制原理 → 一次真实运行的轮次串联 → 设计原因 → 容易踩的坑 → 知识地图"展开，约 100 到 180 行 markdown 配一份 15-24 行的 JSONL 回放，文字与回放节点一一对应。web 端 ReplayPlayer 支持播放 / 暂停 / 单步 / 0.5×–4× 速度调节。
+11 个场景全部完成。每节按"起因 → 屏幕上看见的过程 → 内部状态 → 设计原因 → 自己试一次 → 知识地图"六节展开，约 100 到 150 行 markdown，配一份 10 到 25 行的 JSONL 对话回放。
 
 读这些场景不用读 Python。但每节末尾会指向 `agents/` 里对应的最小复刻代码，30 到 800 行不等，看完场景再去读代码，每一行都能对得上。
 
