@@ -1,16 +1,17 @@
 import { cn } from "@/lib/utils";
 
+/**
+ * Layer badge — each capability layer maps to one Anthropic-flavor
+ * swatch. Backgrounds use the swatch at low opacity so the chip
+ * tints rather than shouts; text is ink so it stays legible at
+ * 11px on cream.
+ */
 const LAYER_COLORS = {
-  tools:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  planning:
-    "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300",
-  memory:
-    "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  concurrency:
-    "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
-  collaboration:
-    "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+  tools: "bg-cloud/30 text-ink",
+  planning: "bg-cactus/40 text-ink",
+  memory: "bg-heather/40 text-ink",
+  concurrency: "bg-coral/55 text-ink",
+  collaboration: "bg-fig/25 text-ink",
 } as const;
 
 interface BadgeProps {
@@ -23,9 +24,9 @@ export function LayerBadge({ layer, children, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-sm px-2 py-0.5 text-[11px] font-medium tracking-[0.01em]",
         LAYER_COLORS[layer],
-        className
+        className,
       )}
     >
       {children}

@@ -10,6 +10,7 @@ export function generateStaticParams() {
 const COPY = {
   zh: {
     title: "11 个工作机制",
+    eyebrow: "案例叙事",
     intro:
       "Claude Code 在实证研究里的每一项能力，用研究者熟悉的话讲清楚它在做什么、为什么这样设计。每节按定义、工作机制、设计原因、容易踩的坑、知识地图五节展开。全部示例围绕贯穿案例'耐心资本对企业 ESG 表现的影响'展开。",
     timelineHeader: "按项目时间线读",
@@ -45,6 +46,7 @@ const COPY = {
   },
   en: {
     title: "11 mechanisms",
+    eyebrow: "Case narrative",
     intro:
       "Every capability Claude Code uses in empirical research, explained in researcher-familiar language. Each section follows the same five-part structure: definition, mechanism, design reasoning, common pitfalls, knowledge map. Every example is anchored to the running case — Patient Capital → Corporate ESG Performance.",
     timelineHeader: "Read by project timeline",
@@ -86,7 +88,9 @@ function runningTagOf(runningExample: string | null): string | null {
   const second = splitIdx > 0 ? runningExample.slice(splitIdx + 1).trim() : "";
   if (!second) return null;
   const cutoff = second.search(/[，,。.]/);
-  return cutoff > 0 ? second.slice(0, cutoff).trim() : second.slice(0, 32).trim();
+  return cutoff > 0
+    ? second.slice(0, cutoff).trim()
+    : second.slice(0, 32).trim();
 }
 
 export default async function ScenariosIndexPage({
@@ -100,118 +104,129 @@ export default async function ScenariosIndexPage({
   const bySlug = new Map(scenarios.map((s) => [s.slug, s]));
 
   return (
-    <div className="flex flex-col gap-10 pb-16">
-      <section className="pt-6 sm:pt-12">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {c.title}
-        </h1>
-        <p className="mt-4 max-w-3xl text-base text-[var(--color-text-secondary)] sm:text-lg">
+    <div className="space-y-[var(--space-m)] pb-[var(--space-m)]">
+      <header className="max-w-3xl pt-4">
+        <p className="eyebrow">{c.eyebrow}</p>
+        <h1 className="display mt-3 text-ink">{c.title}</h1>
+        <p className="font-fluid-lede mt-5 max-w-2xl leading-[1.75] text-ink-muted">
           {c.intro}
         </p>
-      </section>
+      </header>
 
       {/* Case-timeline view */}
-      <section className="flex flex-col gap-4">
-        <div>
-          <div className="mb-1 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow inline-flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="inline-block h-1.5 w-1.5 rounded-full bg-cactus"
+            />
             {c.timelineHeader}
-          </div>
-          <p className="max-w-3xl text-sm text-[var(--color-text-secondary)]">
+          </p>
+          <p className="font-fluid-body mt-3 max-w-2xl leading-[1.75] text-ink-muted">
             {c.timelineDesc}
           </p>
-        </div>
+        </header>
 
-        <div className="space-y-5">
+        <div className="mt-8 space-y-8 border-t border-rule pt-7">
           {c.phases.map((phase, pi) => (
-            <div key={pi} className="rounded-xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/60 to-white p-4 dark:border-emerald-900/40 dark:from-emerald-950/20 dark:to-zinc-900">
-              <div className="mb-3 flex items-baseline justify-between gap-3 border-b border-emerald-200/60 pb-2 dark:border-emerald-900/30">
-                <div className="text-sm font-semibold text-emerald-900 dark:text-emerald-100">
+            <div key={pi}>
+              <div className="mb-4 flex items-baseline justify-between gap-3 border-b border-rule pb-2.5">
+                <h3 className="font-serif text-[17px] text-ink">
                   {phase.title}
-                </div>
-                <div className="font-mono text-[11px] text-emerald-700/70 dark:text-emerald-300/70">
+                </h3>
+                <span
+                  translate="no"
+                  className="font-mono text-[11.5px] text-ink-subtle"
+                >
                   {phase.subtitle}
-                </div>
+                </span>
               </div>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <ul className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
                 {phase.slugs.map((slug) => {
                   const s = bySlug.get(slug);
                   if (!s) return null;
                   const tag = runningTagOf(s.runningExample);
                   return (
-                    <Link
-                      key={slug}
-                      href={`/${locale}/scenarios/${slug}`}
-                      className="group flex h-full flex-col gap-1 rounded-lg border border-zinc-200 bg-white px-3 py-2 transition-all hover:border-emerald-400 hover:shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-emerald-600"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="rounded bg-emerald-100 px-1.5 py-px font-mono text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-                          {s.number.padStart(2, "0")}
-                        </span>
-                        <span className="truncate text-sm font-medium group-hover:underline">
-                          {s.title}
-                        </span>
-                      </div>
-                      {tag && (
-                        <span className="line-clamp-1 text-[11px] text-[var(--color-text-secondary)]">
-                          {tag}
-                        </span>
-                      )}
-                    </Link>
+                    <li key={slug}>
+                      <Link
+                        href={`/${locale}/scenarios/${slug}`}
+                        className="group block rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember"
+                      >
+                        <div className="flex items-baseline gap-2">
+                          <span
+                            translate="no"
+                            className="eyebrow-strong text-ember tabular-nums"
+                          >
+                            {s.number.padStart(2, "0")}
+                          </span>
+                          <h4 className="font-serif text-[15px] leading-snug text-ink transition-colors group-hover:text-ember">
+                            {s.title}
+                          </h4>
+                        </div>
+                        {tag && (
+                          <p className="mt-1.5 line-clamp-1 text-[12px] text-ink-subtle">
+                            {tag}
+                          </p>
+                        )}
+                      </Link>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           ))}
         </div>
 
-        <p className="rounded-md border border-amber-200 bg-amber-50/50 px-3 py-2 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
+        <p className="mt-7 border-l-2 border-ember bg-cream-surface px-4 py-3 text-[13px] leading-[1.7] text-ink-muted">
           {c.skipNote}
         </p>
       </section>
 
       {/* Numeric-order grid */}
-      <section className="flex flex-col gap-4">
-        <div>
-          <h2 className="text-lg font-semibold tracking-tight">{c.allHeader}</h2>
-          <p className="mt-1 max-w-3xl text-sm text-[var(--color-text-secondary)]">
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "工程顺序" : "Engineering order"}</p>
+          <h2 className="display mt-3 text-ink">{c.allHeader}</h2>
+          <p className="font-fluid-body mt-4 max-w-2xl leading-[1.75] text-ink-muted">
             {c.allDesc}
           </p>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        </header>
+        <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-7 border-t border-rule pt-7 sm:grid-cols-2 lg:grid-cols-3">
           {scenarios.map((s) => {
             const runningTag = runningTagOf(s.runningExample);
             return (
-              <Link
-                key={s.slug}
-                href={`/${locale}/scenarios/${s.slug}`}
-                className="group flex h-full flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 transition-all hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-sm dark:hover:border-zinc-600"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="rounded-md bg-zinc-900 px-2 py-0.5 font-mono text-xs text-white dark:bg-white dark:text-zinc-900">
-                    s{s.number.padStart(2, "0")}
-                  </span>
-                  {runningTag && (
-                    <span className="inline-flex items-center gap-1 truncate rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-                      <span className="hidden sm:inline">{c.runningCase} · </span>
-                      <span className="truncate">{runningTag}</span>
+              <li key={s.slug}>
+                <Link
+                  href={`/${locale}/scenarios/${s.slug}`}
+                  className="group block rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember"
+                >
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span
+                      translate="no"
+                      className="eyebrow-strong text-ember"
+                    >
+                      s{s.number.padStart(2, "0")}
                     </span>
+                    {runningTag && (
+                      <span className="eyebrow truncate">
+                        {c.runningCase} · {runningTag}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-2 font-serif text-[18px] leading-snug text-ink transition-colors group-hover:text-ember">
+                    {s.title}
+                  </h3>
+                  {s.description && (
+                    <p className="mt-2 line-clamp-3 text-[13.5px] leading-[1.75] text-ink-muted">
+                      {s.description}
+                    </p>
                   )}
-                </div>
-                <h3 className="text-base font-semibold tracking-tight group-hover:underline">
-                  {s.title}
-                </h3>
-                {s.description && (
-                  <p className="line-clamp-4 text-xs text-[var(--color-text-secondary)] sm:text-sm">
-                    {s.description}
-                  </p>
-                )}
-              </Link>
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </section>
     </div>
   );

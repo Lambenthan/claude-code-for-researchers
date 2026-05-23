@@ -21,7 +21,9 @@ export async function generateMetadata({
   const messages = metaMessages[locale] || metaMessages.en;
   return {
     title: messages.meta?.title || "Learn Claude Code",
-    description: messages.meta?.description || "Build an AI coding agent from scratch, one concept at a time",
+    description:
+      messages.meta?.description ||
+      "Build an AI coding agent from scratch, one concept at a time",
   };
 }
 
@@ -35,21 +37,40 @@ export default async function RootLayout({
   const { locale } = await params;
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            var theme = localStorage.getItem('theme');
-            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-              document.documentElement.classList.add('dark');
-            }
-          })();
-        `}} />
+        {/*
+          Geist (sans) + Source Serif 4 (serif) — closest free analogs to
+          Anthropic's proprietary Styrene B + Tiempos pair. Loaded over
+          Google Fonts CDN with preconnect to keep first-paint snappy.
+          LXGW WenKai Screen handles CJK glyphs — strokes tuned for
+          screen rendering at 10–16px so kaiti doesn't smudge.
+        */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://cdn.jsdelivr.net"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont/lxgwwenkaiscreen.css"
+        />
+        <meta name="theme-color" content="#f5f4ed" />
       </head>
-      <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+      <body className="min-h-screen antialiased">
         <I18nProvider locale={locale}>
           <Header />
-          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <main className="mx-auto max-w-[88rem] px-6 py-12 sm:px-8 lg:px-10">
             {children}
           </main>
         </I18nProvider>

@@ -15,23 +15,35 @@ export function Tabs({ tabs, defaultTab, children, className }: TabsProps) {
 
   return (
     <div className={className}>
-      <div className="flex border-b border-zinc-200 dark:border-zinc-700">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActive(tab.id)}
-            className={cn(
-              "px-4 py-2 text-sm font-medium transition-colors",
-              active === tab.id
-                ? "border-b-2 border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
-                : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex gap-1 border-b border-rule" role="tablist">
+        {tabs.map((tab) => {
+          const isActive = active === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActive(tab.id)}
+              className={cn(
+                "relative -mb-px px-4 py-2.5 text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember",
+                isActive
+                  ? "font-medium text-ink"
+                  : "text-ink-muted hover:text-ink",
+              )}
+            >
+              {tab.label}
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-px bg-ember"
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
-      <div className="mt-4">{children(active)}</div>
+      <div className="mt-5">{children(active)}</div>
     </div>
   );
 }

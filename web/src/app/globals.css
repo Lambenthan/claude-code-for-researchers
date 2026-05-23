@@ -1,31 +1,113 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  /* ────────────────────────────────────────────────────────────────────
+     Anthropic-flavor palette — cream/ink/ember spot, muted swatches
+     for the five capability layers. Mirrors the field-notes design
+     system so the two surfaces feel like one editorial brand.
+     ──────────────────────────────────────────────────────────────────── */
+  --color-cream: #f5f4ed;
+  --color-cream-surface: #fafaf7;
+  --color-cream-elevated: #ffffff;
+  --color-cream-hover: #efece2;
 
+  --color-ink: #141413;
+  --color-ink-muted: #5e5b54;
+  --color-ink-subtle: #908d83;
+
+  --color-rule: #e3dfd2;
+  --color-rule-strong: #c8c4b5;
+
+  --color-ember: #c15f3c;
+  --color-ember-soft: #d8826a;
+
+  /* Accent swatches — borrowed from anthropic.com. Each maps to one
+     capability layer in lib/constants.ts so layer colors stay legible
+     against the cream/ink base instead of fighting it. */
+  --color-cactus:  #bcd1ca;  /* mint — planning */
+  --color-coral:   #ebcece;  /* nude pink — concurrency */
+  --color-fig:     #c46686;  /* magenta — collaboration */
+  --color-heather: #cbcadb;  /* lavender — memory */
+  --color-cloud:   #b0aea5;  /* warm grey — tools */
+
+  /* Code-block surfaces (dark, tuned to warm ink rather than slate). */
+  --color-code-bg: #1a1916;
+  --color-code-border: #2a2823;
+  --color-code-text: #e8e4d8;
+  --color-code-mute: #94918a;
+
+  /* ────────────────────────────────────────────────────────────────────
+     Typography stacks. Anthropic ships proprietary Styrene + Tiempos
+     so we name them first; everyone else falls back to Geist + Source
+     Serif 4 (loaded over CDN in [locale]/layout.tsx). CJK glyphs come
+     from LXGW WenKai Screen, again via CDN.
+     ──────────────────────────────────────────────────────────────────── */
+  --font-serif:
+    "Tiempos Text", "Tiempos Headline", "Source Serif 4",
+    "LXGW WenKai Screen", "LXGW WenKai", "霞鹜文楷",
+    "Songti SC", "STSong", Georgia, serif;
+  --font-sans:
+    "Styrene B Web", "Styrene B", "Söhne", "Geist", "Inter",
+    -apple-system, BlinkMacSystemFont,
+    "LXGW WenKai Screen", "LXGW WenKai", "霞鹜文楷",
+    "PingFang SC", "Source Han Sans SC", "Noto Sans CJK SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono:
+    "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* ────────────────────────────────────────────────────────────────────
+     Fluid type + space scale. Same clamp() rhythm as field-notes — the
+     interface breathes between 360 px and 1432 px without breakpoint
+     jumps. Tailwind v4 picks these up under text-[var(--type-…)] /
+     class="font-fluid-*".
+     ──────────────────────────────────────────────────────────────────── */
+  --type-eyebrow: 10.5px;
+  --type-body:    clamp(15px, 0.5vw + 13px, 17px);
+  --type-lede:    clamp(16px, 0.5vw + 14px, 18px);
+  --type-h3:      clamp(17px, 0.75vw + 15px, 20px);
+  --type-h2:      clamp(22px, 1.5vw + 18px, 32px);
+  --type-h1:      clamp(36px, 2.5vw + 24px, 52px);
+  --type-h1-xl:   clamp(44px, 3.5vw + 28px, 64px);
+
+  --space-xs: clamp(1.5rem, 0.5vw + 1.3rem, 2rem);
+  --space-s:  clamp(2rem,   1.5vw + 1.4rem, 3rem);
+  --space-m:  clamp(3.5rem, 3.5vw + 2rem,   6rem);
+  --space-l:  clamp(7rem,   9vw   + 4rem,  14rem);
+}
+
+/* Legacy aliases — old code references --color-bg / --color-text /
+   --color-text-secondary / --color-border / --color-layer-* via
+   text-[var(--color-text-secondary)] style classes. Map them to the
+   new palette so untouched pages don't drift off-brand. */
 :root {
-  --color-layer-tools: #3B82F6;
-  --color-layer-planning: #10B981;
-  --color-layer-memory: #8B5CF6;
-  --color-layer-concurrency: #F59E0B;
-  --color-layer-collaboration: #EF4444;
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f4f4f5;
-  --color-text: #09090b;
-  --color-text-secondary: #71717a;
-  --color-border: #e4e4e7;
+  --color-bg: var(--color-cream);
+  --color-bg-secondary: var(--color-cream-surface);
+  --color-text: var(--color-ink);
+  --color-text-secondary: var(--color-ink-muted);
+  --color-border: var(--color-rule);
+  --color-layer-tools: var(--color-cloud);
+  --color-layer-planning: var(--color-cactus);
+  --color-layer-memory: var(--color-heather);
+  --color-layer-concurrency: var(--color-coral);
+  --color-layer-collaboration: var(--color-fig);
 }
 
-.dark {
-  --color-bg: #09090b;
-  --color-bg-secondary: #18181b;
-  --color-text: #fafafa;
-  --color-text-secondary: #a1a1aa;
-  --color-border: #27272a;
-}
-
+html,
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  letter-spacing: -0.005em;
+  font-feature-settings: "kern", "ss01", "cv11";
+}
+
+::selection {
+  background: rgba(193, 95, 60, 0.22);
+  color: var(--color-ink);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (max-width: 640px) {
@@ -34,99 +116,160 @@ body {
   }
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
+/* ===============================================================
+   Editorial display headline. Serif, opsz-tilted for headline.
+   Use .display on h1/h2; layer .display-xl on top for hero scale.
+   =============================================================== */
+.display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 60;
+  letter-spacing: -0.022em;
+  line-height: 1.06;
+  font-weight: 450;
+  font-size: var(--type-h1);
+  text-wrap: balance;
 }
 
-/* =====================================================
-   PROSE-CUSTOM: Premium documentation rendering
-   ===================================================== */
+.display-xl {
+  font-size: var(--type-h1-xl);
+  line-height: 1.04;
+}
 
-/* -- Headings -- */
+.display em {
+  font-style: italic;
+  font-variation-settings: "opsz" 60;
+  font-weight: 400;
+  color: var(--color-ember);
+}
+
+/* Utility helpers for fluid scale outside Tailwind. */
+.font-fluid-body { font-size: var(--type-body); }
+.font-fluid-lede { font-size: var(--type-lede); }
+.font-fluid-h3   { font-size: var(--type-h3); }
+.font-fluid-h2   { font-size: var(--type-h2); }
+.font-fluid-h1   { font-size: var(--type-h1); }
+
+.section-xs { padding-top: var(--space-xs); padding-bottom: var(--space-xs); }
+.section-s  { padding-top: var(--space-s);  padding-bottom: var(--space-s); }
+.section-m  { padding-top: var(--space-m);  padding-bottom: var(--space-m); }
+.section-l  { padding-top: var(--space-l);  padding-bottom: var(--space-l); }
+
+/* Eyebrow — small-caps metadata label, used everywhere. */
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  font-size: 10.5px;
+  color: var(--color-ink-subtle);
+}
+
+.eyebrow-strong {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--color-ink);
+}
+
+/* Hairline that picks up rule color. */
+.rule { border-color: var(--color-rule); }
+
+/* Card shell — flat border, subtle hover lift. */
+.card {
+  background: var(--color-cream-surface);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 220ms ease;
+  will-change: transform;
+}
+.card:hover {
+  background: var(--color-cream-elevated);
+  border-color: var(--color-rule-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -16px rgba(20, 20, 19, 0.12);
+}
+
+/* ===============================================================
+   PROSE-CUSTOM: docs rendering. Retuned to cream/ink/ember.
+   Headings are serif, body is sans, code is monospaced dark
+   on a warm-ink surface (the only dark surface in the site,
+   intentional — code reads better on its own contrast layer).
+   =============================================================== */
 
 .prose-custom h1 {
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #09090b;
-}
-
-.dark .prose-custom h1 {
-  color: #fafafa;
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 1.5vw + 20px, 32px);
+  line-height: 1.18;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  color: var(--color-ink);
+  text-wrap: balance;
 }
 
 .prose-custom h2 {
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #09090b;
-  border-bottom: 1px solid #e4e4e7;
-}
-
-.dark .prose-custom h2 {
-  color: #fafafa;
-  border-bottom-color: #27272a;
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 1vw + 16px, 24px);
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-rule);
+  text-wrap: balance;
 }
 
 .prose-custom h3 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  font-size: 1.0625rem;
-  line-height: 1.5rem;
-  font-weight: 600;
-  color: #18181b;
-}
-
-.dark .prose-custom h3 {
-  color: #e4e4e7;
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 0.5vw + 15px, 19px);
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  color: var(--color-ink);
 }
 
 .prose-custom h4 {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  font-size: 0.9375rem;
-  line-height: 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.5;
   font-weight: 600;
-  color: #27272a;
+  color: var(--color-ink);
 }
-
-.dark .prose-custom h4 {
-  color: #d4d4d8;
-}
-
-/* -- Paragraphs -- */
 
 .prose-custom p {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #3f3f46;
+  font-size: var(--type-body);
+  line-height: 1.8;
+  color: var(--color-ink);
 }
 
-.dark .prose-custom p {
-  color: #d4d4d8;
-}
-
-/* -- Hero callout (first blockquote) -- */
+/* -- Hero callout (the first blockquote in a doc) -- */
 
 .prose-custom blockquote.hero-callout {
   position: relative;
   margin-top: 0;
   margin-bottom: 1.5rem;
   border-left: none;
-  border-radius: 0.75rem;
-  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-  padding: 1.25rem 1.5rem 1.25rem 1.75rem;
+  border-radius: 4px;
+  background: var(--color-cream-surface);
+  padding: 1.1rem 1.4rem 1.1rem 1.6rem;
   font-style: normal;
   overflow: hidden;
+  border: 1px solid var(--color-rule);
 }
 
 .prose-custom blockquote.hero-callout::before {
@@ -135,25 +278,16 @@ body {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
-  background: linear-gradient(to bottom, #3b82f6, #10b981);
-  border-radius: 4px 0 0 4px;
+  width: 3px;
+  background: var(--color-ember);
 }
 
 .prose-custom blockquote.hero-callout p {
-  font-size: 0.95rem;
-  line-height: 1.65;
+  font-size: var(--type-lede);
+  line-height: 1.7;
   font-weight: 500;
-  color: #1e40af;
+  color: var(--color-ink);
   margin: 0;
-}
-
-.dark .prose-custom blockquote.hero-callout {
-  background: linear-gradient(135deg, #172554 0%, #052e16 100%);
-}
-
-.dark .prose-custom blockquote.hero-callout p {
-  color: #93c5fd;
 }
 
 /* -- Regular blockquotes -- */
@@ -161,47 +295,37 @@ body {
 .prose-custom blockquote {
   margin-top: 1rem;
   margin-bottom: 1rem;
-  border-left: 3px solid #a5b4fc;
-  border-radius: 0 0.5rem 0.5rem 0;
-  background-color: #eef2ff;
-  padding: 0.75rem 1rem;
-  font-style: normal;
+  border-left: 2px solid var(--color-ember);
+  background: transparent;
+  padding: 0.2em 1em;
+  font-style: italic;
 }
 
 .prose-custom blockquote p {
-  color: #4338ca;
-  font-size: 0.875rem;
-  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: 14px;
+  margin: 0.3em 0;
 }
 
-.dark .prose-custom blockquote {
-  border-left-color: #6366f1;
-  background-color: rgba(99, 102, 241, 0.1);
-}
-
-.dark .prose-custom blockquote p {
-  color: #c7d2fe;
-}
-
-/* -- Code blocks with language label -- */
+/* -- Code blocks -- */
 
 .prose-custom pre {
   position: relative;
   overflow-x: auto;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #1e293b;
-  background-color: #0f172a;
-  padding: 1.25rem;
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: #e2e8f0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  border-radius: 4px;
+  border: 1px solid var(--color-code-border);
+  background-color: var(--color-code-bg);
+  padding: 1.1rem 1.25rem;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-code-text);
+  font-family: var(--font-mono);
 }
 
 .prose-custom pre.code-block {
-  padding-top: 2.25rem;
+  padding-top: 2.1rem;
 }
 
 .prose-custom pre.code-block::before {
@@ -209,81 +333,61 @@ body {
   position: absolute;
   top: 0;
   right: 0.75rem;
-  padding: 0.125rem 0.625rem 0.25rem;
-  background: #3b82f6;
-  color: #ffffff;
-  font-size: 0.625rem;
-  font-weight: 700;
+  padding: 0.15rem 0.6rem 0.2rem;
+  background: var(--color-ember);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-radius: 0 0 0.375rem 0.375rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.12em;
+  border-radius: 0 0 3px 3px;
+  font-family: var(--font-sans);
 }
 
 .prose-custom pre.code-block[data-language="sh"]::before {
-  background: #22c55e;
+  background: var(--color-cactus);
+  color: var(--color-ink);
   content: "terminal";
 }
 
 /* -- ASCII diagram containers -- */
 
 .prose-custom pre.ascii-diagram {
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border: 1px solid #cbd5e1;
-  color: #334155;
+  background: var(--color-cream-hover);
+  border: 1px solid var(--color-rule);
+  color: var(--color-ink-muted);
   text-align: center;
-  font-size: 0.75rem;
-  line-height: 1.35;
-  padding: 1.5rem 1rem;
-}
-
-.dark .prose-custom pre.ascii-diagram {
-  background: linear-gradient(135deg, #1e1b4b, #172554);
-  border-color: #312e81;
-  color: #c7d2fe;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 1.4rem 1rem;
 }
 
 /* -- Inline code -- */
 
 .prose-custom :not(pre) > code {
-  border-radius: 0.375rem;
-  background-color: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  padding: 0.125rem 0.425rem;
-  font-size: 0.8125rem;
+  border-radius: 3px;
+  background-color: var(--color-cream-hover);
+  border: 1px solid var(--color-rule);
+  padding: 0.1em 0.4em;
+  font-size: 0.88em;
   font-weight: 500;
-  color: #be185d;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.dark .prose-custom :not(pre) > code {
-  background-color: #27272a;
-  border-color: #3f3f46;
-  color: #f9a8d4;
+  color: var(--color-ember);
+  font-family: var(--font-mono);
 }
 
 /* -- Links -- */
 
 .prose-custom a {
-  color: #2563eb;
+  color: var(--color-ember);
   font-weight: 500;
   text-decoration: underline;
-  text-decoration-color: #93c5fd;
+  text-decoration-thickness: 1px;
   text-underline-offset: 2px;
-  transition: text-decoration-color 0.15s;
+  transition: color 0.18s;
 }
 
 .prose-custom a:hover {
-  text-decoration-color: #2563eb;
-}
-
-.dark .prose-custom a {
-  color: #60a5fa;
-  text-decoration-color: #1e40af;
-}
-
-.dark .prose-custom a:hover {
-  text-decoration-color: #60a5fa;
+  color: var(--color-ink);
 }
 
 /* -- Lists -- */
@@ -291,24 +395,20 @@ body {
 .prose-custom ul {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-  padding-left: 1.5rem;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #3f3f46;
-}
-
-.dark .prose-custom ul {
-  color: #d4d4d8;
+  padding-left: 1.4rem;
+  font-size: var(--type-body);
+  line-height: 1.75;
+  color: var(--color-ink);
 }
 
 .prose-custom ul > li {
-  margin-top: 0.375rem;
-  margin-bottom: 0.375rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
   position: relative;
 }
 
 .prose-custom ul > li::marker {
-  color: #3b82f6;
+  color: var(--color-ember);
 }
 
 .prose-custom ol {
@@ -317,20 +417,16 @@ body {
   padding-left: 0;
   list-style: none;
   counter-reset: step-counter;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #3f3f46;
-}
-
-.dark .prose-custom ol {
-  color: #d4d4d8;
+  font-size: var(--type-body);
+  line-height: 1.75;
+  color: var(--color-ink);
 }
 
 .prose-custom ol > li {
   counter-increment: step-counter;
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-  padding-left: 2.75rem;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  padding-left: 2.4rem;
   position: relative;
 }
 
@@ -338,22 +434,23 @@ body {
   content: counter(step-counter);
   position: absolute;
   left: 0;
-  top: 0;
-  width: 1.75rem;
-  height: 1.75rem;
+  top: 0.15em;
+  width: 1.6rem;
+  height: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: ui-monospace, SFMono-Regular, monospace;
+  border-radius: 50%;
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-cream-surface);
+  color: var(--color-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--font-sans);
   flex-shrink: 0;
 }
 
-/* Reset nested lists inside ol to normal style */
+/* Reset nested lists inside ol */
 .prose-custom ol > li > ul {
   padding-left: 1.25rem;
 }
@@ -372,66 +469,36 @@ body {
   width: 100%;
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  line-height: 1.55;
 }
 
-.dark .prose-custom table {
-  border-color: #27272a;
-}
-
-.prose-custom thead {
-  border-bottom: none;
-}
-
-.prose-custom th {
-  padding: 0.625rem 1rem;
+.prose-custom thead th {
+  padding: 0.55rem 0.85rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.6875rem;
+  font-size: 10.5px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  background-color: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.dark .prose-custom th {
-  color: #94a3b8;
-  background-color: #18181b;
-  border-bottom-color: #27272a;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-subtle);
+  border-bottom: 1.5px solid var(--color-rule-strong);
+  background: transparent;
 }
 
 .prose-custom td {
-  padding: 0.625rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  color: #475569;
-}
-
-.prose-custom td code {
-  font-size: 0.75rem;
-}
-
-.dark .prose-custom td {
-  border-bottom-color: #1e1e22;
-  color: #cbd5e1;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--color-rule);
+  color: var(--color-ink);
+  vertical-align: top;
 }
 
 .prose-custom tbody tr:last-child td {
   border-bottom: none;
 }
 
-.prose-custom tbody tr:hover {
-  background-color: #f8fafc;
-}
-
-.dark .prose-custom tbody tr:hover {
-  background-color: #111113;
+.prose-custom td code {
+  font-size: 12px;
 }
 
 /* -- Horizontal rules -- */
@@ -441,115 +508,117 @@ body {
   margin-bottom: 2rem;
   border: none;
   height: 1px;
-  background: linear-gradient(to right, transparent, #d4d4d8, transparent);
+  background: var(--color-rule);
 }
 
-.dark .prose-custom hr {
-  background: linear-gradient(to right, transparent, #3f3f46, transparent);
-}
-
-/* -- Strong / Em -- */
+/* -- Strong / em -- */
 
 .prose-custom strong {
-  font-weight: 700;
-  color: #09090b;
-}
-
-.dark .prose-custom strong {
-  color: #fafafa;
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .prose-custom em {
   font-style: italic;
-  color: #52525b;
+  color: var(--color-ink-muted);
 }
 
-.dark .prose-custom em {
-  color: #a1a1aa;
-}
-
-/* =====================================================
-   HIGHLIGHT.JS TOKEN THEME (code syntax highlighting)
-   ===================================================== */
+/* ===============================================================
+   HIGHLIGHT.JS TOKEN THEME — tuned for the warm-ink code bg above.
+   Same palette family as the swatches so syntax colors feel part
+   of the site rather than a random library.
+   =============================================================== */
 
 .hljs {
   background: transparent !important;
+  color: var(--color-code-text);
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-type {
-  color: #c084fc;
+  color: #d4b3e8;          /* heather, brightened for dark bg */
   font-weight: 500;
 }
 
 .hljs-literal,
 .hljs-symbol,
-.hljs-bullet {
-  color: #fb923c;
+.hljs-bullet,
+.hljs-number {
+  color: var(--color-ember-soft);
 }
 
 .hljs-string,
 .hljs-doctag,
 .hljs-template-variable,
 .hljs-variable {
-  color: #34d399;
-}
-
-.hljs-number {
-  color: #fb923c;
+  color: #a8d0bf;          /* cactus, brightened */
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #64748b;
+  color: var(--color-code-mute);
   font-style: italic;
 }
 
 .hljs-title,
-.hljs-section {
-  color: #60a5fa;
-  font-weight: 600;
-}
-
+.hljs-section,
 .hljs-title.function_,
 .hljs-title.class_ {
-  color: #60a5fa;
+  color: #d6a3b8;          /* coral/fig blend */
+  font-weight: 500;
 }
 
 .hljs-built_in {
-  color: #f472b6;
+  color: #d4b3e8;
 }
 
 .hljs-attr,
 .hljs-attribute {
-  color: #fbbf24;
+  color: #e0c897;          /* soft amber, kept for legibility */
 }
 
 .hljs-params {
-  color: #e2e8f0;
+  color: var(--color-code-text);
 }
 
 .hljs-meta {
-  color: #94a3b8;
+  color: var(--color-code-mute);
 }
 
 .hljs-name,
 .hljs-tag {
-  color: #f87171;
+  color: var(--color-ember-soft);
 }
 
 .hljs-selector-class,
 .hljs-selector-id {
-  color: #a78bfa;
+  color: #d4b3e8;
 }
 
 .hljs-deletion {
-  color: #fca5a5;
-  background-color: rgba(239, 68, 68, 0.15);
+  color: #f1b5b1;
+  background-color: rgba(193, 95, 60, 0.12);
 }
 
 .hljs-addition {
-  color: #86efac;
-  background-color: rgba(34, 197, 94, 0.15);
+  color: #b9d8c5;
+  background-color: rgba(188, 209, 202, 0.18);
+}
+
+/* ===============================================================
+   Reduced motion respect.
+   =============================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+    box-shadow: none;
+    transition: none;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

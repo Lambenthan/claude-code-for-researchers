@@ -247,108 +247,116 @@ export default async function ClaudeMdPage({
   const c = locale === "zh" ? COPY_ZH : COPY_EN;
 
   return (
-    <div className="flex flex-col gap-10 pb-16">
-      <section className="pt-6 sm:pt-12">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {c.title}
-        </h1>
-        <p className="mt-4 max-w-3xl text-base text-[var(--color-text-secondary)] sm:text-lg">
+    <div className="space-y-[var(--space-m)] pb-[var(--space-m)]">
+      <header className="max-w-3xl pt-4">
+        <p className="eyebrow">CLAUDE.md</p>
+        <h1 className="display mt-3 text-ink">{c.title}</h1>
+        <p className="font-fluid-lede mt-5 max-w-2xl leading-[1.75] text-ink-muted">
           {c.intro}
         </p>
-      </section>
+      </header>
 
       <ClaudeMdLoadingAnimation />
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s1Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s1Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
+      <Prose heading={c.s1Header} body={c.s1Body} />
+      <Prose heading={c.s2Header} body={c.s2Body} />
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s2Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s2Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h3 className="text-base font-semibold">{c.priorityHeader}</h3>
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-border)]">
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="bg-zinc-50 dark:bg-zinc-900">
-                <th className="px-4 py-2 text-left font-semibold">Layer</th>
-                <th className="px-4 py-2 text-left font-semibold">Path</th>
-                <th className="px-4 py-2 text-left font-semibold">Effect</th>
-              </tr>
-            </thead>
-            <tbody>
-              {c.priorityRows.map((row, i) => (
-                <tr
-                  key={i}
-                  className="border-t border-[var(--color-border)]"
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "层次" : "Layering"}</p>
+          <h2 className="display mt-3 text-ink">{c.priorityHeader}</h2>
+        </header>
+        <table className="mt-8 w-full border-collapse text-[13.5px]">
+          <thead>
+            <tr>
+              <th className="eyebrow border-b border-rule-strong py-2 pr-4 text-left font-medium">
+                {locale === "zh" ? "层级" : "Layer"}
+              </th>
+              <th className="eyebrow border-b border-rule-strong py-2 pr-4 text-left font-medium">
+                {locale === "zh" ? "路径" : "Path"}
+              </th>
+              <th className="eyebrow border-b border-rule-strong py-2 text-left font-medium">
+                {locale === "zh" ? "作用" : "Effect"}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {c.priorityRows.map((row, i) => (
+              <tr key={i}>
+                <td className="border-b border-rule py-3 pr-4 align-top font-medium text-ink">
+                  {row.layer}
+                </td>
+                <td
+                  translate="no"
+                  className="border-b border-rule py-3 pr-4 align-top font-mono text-[12px] text-ink-muted"
                 >
-                  <td className="px-4 py-2 font-medium">{row.layer}</td>
-                  <td className="px-4 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
-                    {row.path}
-                  </td>
-                  <td className="px-4 py-2 text-[var(--color-text-secondary)]">
-                    {row.effect}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  {row.path}
+                </td>
+                <td className="border-b border-rule py-3 align-top text-ink-muted">
+                  {row.effect}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-2xl font-bold tracking-tight">{c.sampleHeader}</h2>
-        <p className="max-w-3xl text-sm text-[var(--color-text-secondary)]">
-          {c.sampleNote}
-        </p>
-        <pre className="overflow-x-auto rounded-lg border border-[var(--color-border)] bg-zinc-50 p-4 font-mono text-xs leading-relaxed text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "实例" : "Sample"}</p>
+          <h2 className="display mt-3 text-ink">{c.sampleHeader}</h2>
+          <p className="font-fluid-body mt-4 max-w-2xl leading-[1.75] text-ink-muted">
+            {c.sampleNote}
+          </p>
+        </header>
+        <pre
+          translate="no"
+          className="mt-6 overflow-x-auto border border-[var(--color-code-border)] bg-[var(--color-code-bg)] p-5 font-mono text-[12px] leading-relaxed text-[var(--color-code-text)]"
+        >
           {c.sampleCode}
         </pre>
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s3Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s3Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
+      <Prose heading={c.s3Header} body={c.s3Body} />
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.trapsHeader}</h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {c.traps.map((t, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5"
-            >
-              <h3 className="text-base font-semibold">{t.title}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                {t.desc}
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "常见的坑" : "Pitfalls"}</p>
+          <h2 className="display mt-3 text-ink">{c.trapsHeader}</h2>
+        </header>
+        <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 border-t border-rule pt-7 sm:grid-cols-2">
+          {c.traps.map((trap, i) => (
+            <li key={i} className="border-l-2 border-ember/60 pl-4">
+              <h3 className="font-serif text-[17px] leading-snug text-ink">
+                {trap.title}
+              </h3>
+              <p className="mt-2 text-[13.5px] leading-[1.75] text-ink-muted">
+                {trap.desc}
               </p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </div>
+  );
+}
+
+function Prose({ heading, body }: { heading: string; body: string[] }) {
+  return (
+    <section>
+      <h2 className="display text-ink" style={{ fontSize: "var(--type-h2)" }}>
+        {heading}
+      </h2>
+      <div className="mt-5 space-y-4">
+        {body.map((p, i) => (
+          <p
+            key={i}
+            className="font-fluid-body max-w-3xl leading-[1.85] text-ink"
+          >
+            {p}
+          </p>
+        ))}
+      </div>
+    </section>
   );
 }

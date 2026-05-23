@@ -158,85 +158,73 @@ export default async function ProjectModePage({
   const c = locale === "zh" ? COPY_ZH : COPY_EN;
 
   return (
-    <div className="flex flex-col gap-10 pb-16">
-      <section className="pt-6 sm:pt-12">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {c.title}
-        </h1>
-        <p className="mt-4 max-w-3xl text-base text-[var(--color-text-secondary)] sm:text-lg">
+    <div className="space-y-[var(--space-m)] pb-[var(--space-m)]">
+      <header className="max-w-3xl pt-4">
+        <p className="eyebrow">{locale === "zh" ? "项目制" : "Project mode"}</p>
+        <h1 className="display mt-3 text-ink">{c.title}</h1>
+        <p className="font-fluid-lede mt-5 max-w-2xl leading-[1.75] text-ink-muted">
           {c.intro}
         </p>
-      </section>
+      </header>
 
       <ProjectModeAnimation />
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s1Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s1Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
+      <Prose heading={c.s1Header} body={c.s1Body} />
 
-      <section className="flex flex-col gap-3">
-        <h3 className="text-base font-semibold">{c.treeHeader}</h3>
-        <pre className="overflow-x-auto rounded-lg border border-[var(--color-border)] bg-zinc-50 p-4 font-mono text-xs leading-relaxed text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+      <section className="space-y-4">
+        <h3 className="font-serif text-[18px] leading-snug text-ink">
+          {c.treeHeader}
+        </h3>
+        <pre
+          translate="no"
+          className="overflow-x-auto border border-[var(--color-code-border)] bg-[var(--color-code-bg)] p-4 font-mono text-[12px] leading-relaxed text-[var(--color-code-text)]"
+        >
           {c.treeCode}
         </pre>
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s2Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s2Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
+      <Prose heading={c.s2Header} body={c.s2Body} />
+      <Prose heading={c.s3Header} body={c.s3Body} />
+      <Prose heading={c.s4Header} body={c.s4Body} />
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s3Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s3Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.s4Header}</h2>
-        <div className="flex flex-col gap-3">
-          {c.s4Body.map((p, i) => (
-            <p key={i} className="max-w-3xl text-base text-[var(--color-text-secondary)]">
-              {p}
-            </p>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">{c.trapsHeader}</h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {c.traps.map((t, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5"
-            >
-              <h3 className="text-base font-semibold">{t.title}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                {t.desc}
+      <section>
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "新手常踩的坑" : "Pitfalls"}</p>
+          <h2 className="display mt-3 text-ink">{c.trapsHeader}</h2>
+        </header>
+        <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-8 border-t border-rule pt-7 sm:grid-cols-2 lg:grid-cols-3">
+          {c.traps.map((trap, i) => (
+            <li key={i} className="border-l-2 border-ember/60 pl-4">
+              <h3 className="font-serif text-[17px] leading-snug text-ink">
+                {trap.title}
+              </h3>
+              <p className="mt-2 text-[13.5px] leading-[1.75] text-ink-muted">
+                {trap.desc}
               </p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </div>
+  );
+}
+
+function Prose({ heading, body }: { heading: string; body: string[] }) {
+  return (
+    <section>
+      <h2 className="display text-ink" style={{ fontSize: "var(--type-h2)" }}>
+        {heading}
+      </h2>
+      <div className="mt-5 space-y-4">
+        {body.map((p, i) => (
+          <p
+            key={i}
+            className="font-fluid-body max-w-3xl leading-[1.85] text-ink"
+          >
+            {p}
+          </p>
+        ))}
+      </div>
+    </section>
   );
 }

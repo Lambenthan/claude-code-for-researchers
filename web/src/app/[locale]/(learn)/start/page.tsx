@@ -87,65 +87,74 @@ export default async function GettingStartedPage({
   const c = locale === "zh" ? COPY_ZH : COPY_EN;
 
   return (
-    <div className="flex flex-col gap-10 pb-16">
-      <section className="pt-6 sm:pt-12">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {c.title}
-        </h1>
-        <p className="mt-4 max-w-3xl text-base text-[var(--color-text-secondary)] sm:text-lg">
+    <div className="space-y-[var(--space-m)] pb-[var(--space-m)]">
+      <header className="max-w-3xl pt-4">
+        <p className="eyebrow">{locale === "zh" ? "入门指南" : "Start guide"}</p>
+        <h1 className="display mt-3 text-ink">{c.title}</h1>
+        <p className="font-fluid-lede mt-5 max-w-2xl leading-[1.75] text-ink-muted">
           {c.intro}
         </p>
-      </section>
+      </header>
 
       <GettingStartedAnimation />
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
-          <h3 className="text-base font-semibold">{c.installHeader}</h3>
-          <pre className="overflow-x-auto rounded-md border border-zinc-200 bg-zinc-50 p-3 font-mono text-xs leading-relaxed text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+      <section className="grid grid-cols-1 gap-x-8 gap-y-8 border-t border-rule pt-9 lg:grid-cols-2">
+        <article className="flex flex-col gap-3">
+          <h3 className="font-serif text-[18px] leading-snug text-ink">
+            {c.installHeader}
+          </h3>
+          <pre
+            translate="no"
+            className="overflow-x-auto border border-[var(--color-code-border)] bg-[var(--color-code-bg)] p-4 font-mono text-[12.5px] leading-relaxed text-[var(--color-code-text)]"
+          >
             {c.installCmd}
           </pre>
-          <p className="text-xs text-[var(--color-text-secondary)]">
+          <p className="text-[13.5px] leading-[1.75] text-ink-muted">
             {c.installNote}
           </p>
-        </div>
+        </article>
 
-        <div className="flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5">
-          <h3 className="text-base font-semibold">{c.launchHeader}</h3>
-          <pre className="overflow-x-auto rounded-md border border-zinc-200 bg-zinc-50 p-3 font-mono text-xs leading-relaxed text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+        <article className="flex flex-col gap-3">
+          <h3 className="font-serif text-[18px] leading-snug text-ink">
+            {c.launchHeader}
+          </h3>
+          <pre
+            translate="no"
+            className="overflow-x-auto border border-[var(--color-code-border)] bg-[var(--color-code-bg)] p-4 font-mono text-[12.5px] leading-relaxed text-[var(--color-code-text)]"
+          >
             {c.launchCmd}
           </pre>
-          <p className="text-xs text-[var(--color-text-secondary)]">
+          <p className="text-[13.5px] leading-[1.75] text-ink-muted">
             {c.launchNote}
           </p>
-        </div>
+        </article>
       </section>
 
       <section>
-        <div className="mb-4">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            {c.nextHeader}
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm text-[var(--color-text-secondary)] sm:text-base">
+        <header className="max-w-3xl">
+          <p className="eyebrow">{locale === "zh" ? "继续浏览" : "Continue"}</p>
+          <h2 className="display mt-3 text-ink">{c.nextHeader}</h2>
+          <p className="font-fluid-body mt-4 max-w-2xl leading-[1.75] text-ink-muted">
             {c.nextIntro}
           </p>
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        </header>
+        <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-7 border-t border-rule pt-7 sm:grid-cols-2">
           {c.nextLinks.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="group flex flex-col gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 transition-colors hover:border-zinc-400 dark:hover:border-zinc-600"
-            >
-              <h3 className="text-base font-semibold group-hover:underline">
-                {n.label} →
-              </h3>
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                {n.desc}
-              </p>
-            </Link>
+            <li key={n.href}>
+              <Link
+                href={n.href}
+                className="group block rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember"
+              >
+                <h3 className="font-serif text-[18px] leading-snug text-ink transition-colors group-hover:text-ember">
+                  {n.label} <span aria-hidden="true">→</span>
+                </h3>
+                <p className="mt-2 text-[13.5px] leading-[1.75] text-ink-muted">
+                  {n.desc}
+                </p>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </div>
   );

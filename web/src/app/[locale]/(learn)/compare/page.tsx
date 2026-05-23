@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import { useLocale, useTranslations } from "@/lib/i18n";
 import { LEARNING_PATH, VERSION_META } from "@/lib/constants";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayerBadge } from "@/components/ui/badge";
 import { CodeDiff } from "@/components/diff/code-diff";
 import { ArchDiagram } from "@/components/architecture/arch-diagram";
@@ -19,8 +18,14 @@ export default function ComparePage() {
   const [versionA, setVersionA] = useState<string>("");
   const [versionB, setVersionB] = useState<string>("");
 
-  const infoA = useMemo(() => data.versions.find((v) => v.id === versionA), [versionA]);
-  const infoB = useMemo(() => data.versions.find((v) => v.id === versionB), [versionB]);
+  const infoA = useMemo(
+    () => data.versions.find((v) => v.id === versionA),
+    [versionA],
+  );
+  const infoB = useMemo(
+    () => data.versions.find((v) => v.id === versionB),
+    [versionB],
+  );
   const metaA = versionA ? VERSION_META[versionA] : null;
   const metaB = versionB ? VERSION_META[versionB] : null;
 
@@ -28,17 +33,19 @@ export default function ComparePage() {
     if (!infoA || !infoB) return null;
     const toolsA = new Set(infoA.tools);
     const toolsB = new Set(infoB.tools);
-    const onlyA = infoA.tools.filter((t) => !toolsB.has(t));
-    const onlyB = infoB.tools.filter((t) => !toolsA.has(t));
-    const shared = infoA.tools.filter((t) => toolsB.has(t));
+    const onlyA = infoA.tools.filter((tool) => !toolsB.has(tool));
+    const onlyB = infoB.tools.filter((tool) => !toolsA.has(tool));
+    const shared = infoA.tools.filter((tool) => toolsB.has(tool));
 
     const classesA = new Set(infoA.classes.map((c) => c.name));
-    const classesB = new Set(infoB.classes.map((c) => c.name));
-    const newClasses = infoB.classes.map((c) => c.name).filter((c) => !classesA.has(c));
+    const newClasses = infoB.classes
+      .map((c) => c.name)
+      .filter((c) => !classesA.has(c));
 
     const funcsA = new Set(infoA.functions.map((f) => f.name));
-    const funcsB = new Set(infoB.functions.map((f) => f.name));
-    const newFunctions = infoB.functions.map((f) => f.name).filter((f) => !funcsA.has(f));
+    const newFunctions = infoB.functions
+      .map((f) => f.name)
+      .filter((f) => !funcsA.has(f));
 
     return {
       locDelta: infoB.loc - infoA.loc,
@@ -51,22 +58,30 @@ export default function ComparePage() {
   }, [infoA, infoB]);
 
   return (
-    <div className="py-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">{t("title")}</h1>
-        <p className="mt-2 text-zinc-500 dark:text-zinc-400">{t("subtitle")}</p>
-      </div>
+    <div className="space-y-[var(--space-m)] pb-[var(--space-m)]">
+      <header className="max-w-3xl pt-4">
+        <p className="eyebrow">{locale === "zh" ? "版本对比" : "Version comparison"}</p>
+        <h1 className="display mt-3 text-ink">{t("title")}</h1>
+        <p className="font-fluid-lede mt-5 max-w-2xl leading-[1.75] text-ink-muted">
+          {t("subtitle")}
+        </p>
+      </header>
 
-      {/* Selectors */}
-      <div className="mb-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+      <section className="flex flex-col items-start gap-5 border-t border-rule pt-7 sm:flex-row sm:items-end">
+        <div className="flex-1 space-y-2">
+          <label
+            htmlFor="version-a"
+            className="eyebrow block text-ink"
+          >
             {t("select_a")}
           </label>
           <select
+            id="version-a"
+            name="version-a"
+            autoComplete="off"
             value={versionA}
             onChange={(e) => setVersionA(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+            className="w-full border border-rule-strong bg-cream-elevated px-3 py-2.5 text-[14px] text-ink transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
           >
             <option value="">-- select --</option>
             {LEARNING_PATH.map((v) => (
@@ -77,16 +92,26 @@ export default function ComparePage() {
           </select>
         </div>
 
-        <ArrowRight size={20} className="mt-5 hidden text-zinc-400 sm:block" />
+        <ArrowRight
+          size={20}
+          aria-hidden="true"
+          className="mb-3 hidden text-ink-subtle sm:block"
+        />
 
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        <div className="flex-1 space-y-2">
+          <label
+            htmlFor="version-b"
+            className="eyebrow block text-ink"
+          >
             {t("select_b")}
           </label>
           <select
+            id="version-b"
+            name="version-b"
+            autoComplete="off"
             value={versionB}
             onChange={(e) => setVersionB(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+            className="w-full border border-rule-strong bg-cream-elevated px-3 py-2.5 text-[14px] text-ink transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
           >
             <option value="">-- select --</option>
             {LEARNING_PATH.map((v) => (
@@ -96,212 +121,276 @@ export default function ComparePage() {
             ))}
           </select>
         </div>
-      </div>
+      </section>
 
-      {/* Results */}
       {infoA && infoB && comparison && (
-        <div className="space-y-8">
+        <div className="space-y-12">
           {/* Side-by-side version info */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>{metaA?.title || versionA}</CardTitle>
-                <p className="text-sm text-zinc-500">{metaA?.subtitle}</p>
-              </CardHeader>
-              <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
-                <p>{infoA.loc} LOC</p>
-                <p>{infoA.tools.length} tools</p>
-                {metaA && <LayerBadge layer={metaA.layer}>{metaA.layer}</LayerBadge>}
-              </div>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>{metaB?.title || versionB}</CardTitle>
-                <p className="text-sm text-zinc-500">{metaB?.subtitle}</p>
-              </CardHeader>
-              <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
-                <p>{infoB.loc} LOC</p>
-                <p>{infoB.tools.length} tools</p>
-                {metaB && <LayerBadge layer={metaB.layer}>{metaB.layer}</LayerBadge>}
-              </div>
-            </Card>
-          </div>
+          <section className="grid grid-cols-1 gap-6 border-t border-rule pt-7 sm:grid-cols-2">
+            <article className="border-l-2 border-cloud bg-cream-surface px-5 py-5">
+              <p className="eyebrow">
+                <span translate="no">{versionA}</span>
+              </p>
+              <h2 className="mt-2 font-serif text-[20px] leading-snug text-ink">
+                {metaA?.title || versionA}
+              </h2>
+              {metaA?.subtitle && (
+                <p className="mt-1 text-[13px] italic text-ink-muted">
+                  {metaA.subtitle}
+                </p>
+              )}
+              <dl className="mt-4 flex flex-wrap items-baseline gap-x-4 text-[12.5px]">
+                <Pair label="LOC" value={<span className="tabular-nums">{infoA.loc}</span>} />
+                <Pair label={t("tools")} value={<span className="tabular-nums">{infoA.tools.length}</span>} />
+                {metaA && (
+                  <div className="flex items-baseline gap-1.5">
+                    <dt className="eyebrow">{locale === "zh" ? "层" : "Layer"}</dt>
+                    <dd>
+                      <LayerBadge layer={metaA.layer}>{metaA.layer}</LayerBadge>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </article>
+            <article className="border-l-2 border-ember bg-cream-surface px-5 py-5">
+              <p className="eyebrow">
+                <span translate="no">{versionB}</span>
+              </p>
+              <h2 className="mt-2 font-serif text-[20px] leading-snug text-ink">
+                {metaB?.title || versionB}
+              </h2>
+              {metaB?.subtitle && (
+                <p className="mt-1 text-[13px] italic text-ink-muted">
+                  {metaB.subtitle}
+                </p>
+              )}
+              <dl className="mt-4 flex flex-wrap items-baseline gap-x-4 text-[12.5px]">
+                <Pair label="LOC" value={<span className="tabular-nums">{infoB.loc}</span>} />
+                <Pair label={t("tools")} value={<span className="tabular-nums">{infoB.tools.length}</span>} />
+                {metaB && (
+                  <div className="flex items-baseline gap-1.5">
+                    <dt className="eyebrow">{locale === "zh" ? "层" : "Layer"}</dt>
+                    <dd>
+                      <LayerBadge layer={metaB.layer}>{metaB.layer}</LayerBadge>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </article>
+          </section>
 
-          {/* Side-by-side Architecture Diagrams */}
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">{t("architecture")}</h2>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {/* Architecture Diagrams */}
+          <section>
+            <header className="mb-6">
+              <p className="eyebrow">{locale === "zh" ? "对比图示" : "Side by side"}</p>
+              <h2 className="display mt-3 text-ink">{t("architecture")}</h2>
+            </header>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div>
-                <h3 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                <h3 className="eyebrow mb-3">
                   {metaA?.title || versionA}
                 </h3>
                 <ArchDiagram version={versionA} />
               </div>
               <div>
-                <h3 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                <h3 className="eyebrow mb-3">
                   {metaB?.title || versionB}
                 </h3>
                 <ArchDiagram version={versionB} />
               </div>
             </div>
-          </div>
+          </section>
 
           {/* Structural diff */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                  <FileCode size={16} />
-                  <span className="text-sm">{t("loc_delta")}</span>
-                </div>
-              </CardHeader>
-              <CardTitle>
-                <span className={comparison.locDelta >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
-                  {comparison.locDelta >= 0 ? "+" : ""}{comparison.locDelta}
-                </span>
-                <span className="ml-2 text-sm font-normal text-zinc-500">{t("lines")}</span>
-              </CardTitle>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                  <Wrench size={16} />
-                  <span className="text-sm">{t("new_tools_in_b")}</span>
-                </div>
-              </CardHeader>
-              <CardTitle>
-                <span className="text-blue-600 dark:text-blue-400">{comparison.toolsOnlyB.length}</span>
-              </CardTitle>
-              {comparison.toolsOnlyB.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {comparison.toolsOnlyB.map((tool) => (
-                    <span key={tool} className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                  <Box size={16} />
-                  <span className="text-sm">{t("new_classes_in_b")}</span>
-                </div>
-              </CardHeader>
-              <CardTitle>
-                <span className="text-purple-600 dark:text-purple-400">{comparison.newClasses.length}</span>
-              </CardTitle>
-              {comparison.newClasses.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {comparison.newClasses.map((cls) => (
-                    <span key={cls} className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                      {cls}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                  <FunctionSquare size={16} />
-                  <span className="text-sm">{t("new_functions_in_b")}</span>
-                </div>
-              </CardHeader>
-              <CardTitle>
-                <span className="text-amber-600 dark:text-amber-400">{comparison.newFunctions.length}</span>
-              </CardTitle>
-              {comparison.newFunctions.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {comparison.newFunctions.map((fn) => (
-                    <span key={fn} className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-                      {fn}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </div>
+          <section>
+            <header className="mb-6">
+              <p className="eyebrow">{locale === "zh" ? "差异概览" : "Diff overview"}</p>
+              <h2 className="display mt-3 text-ink">
+                {locale === "zh" ? "结构性差异" : "Structural diff"}
+              </h2>
+            </header>
+            <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <DiffStat
+                icon={<FileCode size={14} aria-hidden="true" />}
+                label={t("loc_delta")}
+                value={
+                  <span
+                    className={
+                      comparison.locDelta >= 0 ? "text-cactus" : "text-ember"
+                    }
+                  >
+                    {comparison.locDelta >= 0 ? "+" : ""}
+                    {comparison.locDelta}
+                  </span>
+                }
+                suffix={t("lines")}
+              />
+              <DiffStat
+                icon={<Wrench size={14} aria-hidden="true" />}
+                label={t("new_tools_in_b")}
+                value={comparison.toolsOnlyB.length}
+                chips={comparison.toolsOnlyB}
+                chipBg="bg-cloud/40"
+              />
+              <DiffStat
+                icon={<Box size={14} aria-hidden="true" />}
+                label={t("new_classes_in_b")}
+                value={comparison.newClasses.length}
+                chips={comparison.newClasses}
+                chipBg="bg-heather/40"
+              />
+              <DiffStat
+                icon={<FunctionSquare size={14} aria-hidden="true" />}
+                label={t("new_functions_in_b")}
+                value={comparison.newFunctions.length}
+                chips={comparison.newFunctions}
+                chipBg="bg-coral/50"
+              />
+            </dl>
+          </section>
 
           {/* Tool comparison */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("tool_comparison")}</CardTitle>
-            </CardHeader>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              <div>
-                <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("only_in")} {metaA?.title || versionA}
-                </h4>
-                {comparison.toolsOnlyA.length === 0 ? (
-                  <p className="text-xs text-zinc-400">{t("none")}</p>
-                ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {comparison.toolsOnlyA.map((tool) => (
-                      <span key={tool} className="rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-300">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div>
-                <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("shared")}
-                </h4>
-                {comparison.toolsShared.length === 0 ? (
-                  <p className="text-xs text-zinc-400">{t("none")}</p>
-                ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {comparison.toolsShared.map((tool) => (
-                      <span key={tool} className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div>
-                <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("only_in")} {metaB?.title || versionB}
-                </h4>
-                {comparison.toolsOnlyB.length === 0 ? (
-                  <p className="text-xs text-zinc-400">{t("none")}</p>
-                ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {comparison.toolsOnlyB.map((tool) => (
-                      <span key={tool} className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+          <section>
+            <header className="mb-6">
+              <p className="eyebrow">{locale === "zh" ? "工具集" : "Tool sets"}</p>
+              <h2 className="display mt-3 text-ink">{t("tool_comparison")}</h2>
+            </header>
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 border-t border-rule pt-6">
+              <ToolColumn
+                label={`${t("only_in")} ${metaA?.title || versionA}`}
+                tools={comparison.toolsOnlyA}
+                empty={t("none")}
+                chipBg="bg-ember/15 text-ember"
+              />
+              <ToolColumn
+                label={t("shared")}
+                tools={comparison.toolsShared}
+                empty={t("none")}
+                chipBg="bg-cream-hover text-ink-muted"
+              />
+              <ToolColumn
+                label={`${t("only_in")} ${metaB?.title || versionB}`}
+                tools={comparison.toolsOnlyB}
+                empty={t("none")}
+                chipBg="bg-cactus/40 text-ink"
+              />
             </div>
-          </Card>
+          </section>
 
           {/* Code Diff */}
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">{t("source_diff")}</h2>
+          <section>
+            <header className="mb-6">
+              <p className="eyebrow">{locale === "zh" ? "源码差异" : "Source"}</p>
+              <h2 className="display mt-3 text-ink">{t("source_diff")}</h2>
+            </header>
             <CodeDiff
               oldSource={infoA.source}
               newSource={infoB.source}
               oldLabel={`${infoA.id} (${infoA.filename})`}
               newLabel={`${infoB.id} (${infoB.filename})`}
             />
-          </div>
+          </section>
         </div>
       )}
 
-      {/* Empty state */}
       {(!versionA || !versionB) && (
-        <div className="rounded-lg border border-dashed border-zinc-300 p-12 text-center dark:border-zinc-700">
-          <p className="text-zinc-400">{t("empty_hint")}</p>
+        <div className="border border-dashed border-rule px-8 py-14 text-center">
+          <p className="font-fluid-body text-ink-muted">{t("empty_hint")}</p>
         </div>
+      )}
+    </div>
+  );
+}
+
+function Pair({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-baseline gap-1.5">
+      <dt className="eyebrow">{label}</dt>
+      <dd className="text-ink">{value}</dd>
+    </div>
+  );
+}
+
+function DiffStat({
+  icon,
+  label,
+  value,
+  suffix,
+  chips,
+  chipBg,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  suffix?: string;
+  chips?: string[];
+  chipBg?: string;
+}) {
+  return (
+    <div>
+      <dt className="eyebrow inline-flex items-center gap-1.5 text-ink-muted">
+        {icon}
+        {label}
+      </dt>
+      <dd className="mt-2 font-serif text-[28px] leading-none text-ink">
+        {value}
+        {suffix && (
+          <span className="ml-2 font-sans text-[12px] font-normal text-ink-subtle">
+            {suffix}
+          </span>
+        )}
+      </dd>
+      {chips && chips.length > 0 && (
+        <ul className="mt-3 flex flex-wrap gap-1">
+          {chips.map((c) => (
+            <li
+              key={c}
+              translate="no"
+              className={`rounded-sm px-1.5 py-0.5 font-mono text-[11px] text-ink ${chipBg ?? "bg-cream-hover"}`}
+            >
+              {c}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function ToolColumn({
+  label,
+  tools,
+  empty,
+  chipBg,
+}: {
+  label: string;
+  tools: string[];
+  empty: string;
+  chipBg: string;
+}) {
+  return (
+    <div>
+      <h4 className="eyebrow mb-3 text-ink">{label}</h4>
+      {tools.length === 0 ? (
+        <p className="text-[12px] italic text-ink-subtle">{empty}</p>
+      ) : (
+        <ul className="flex flex-wrap gap-1">
+          {tools.map((tool) => (
+            <li
+              key={tool}
+              translate="no"
+              className={`rounded-sm px-1.5 py-0.5 font-mono text-[11px] ${chipBg}`}
+            >
+              {tool}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

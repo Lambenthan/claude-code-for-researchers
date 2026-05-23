@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
 import type { ScenarioMeta } from "@/lib/scenarios";
 
 const LAYER_DOT_BG: Record<string, string> = {
-  tools: "bg-blue-500",
-  planning: "bg-emerald-500",
-  memory: "bg-purple-500",
-  concurrency: "bg-amber-500",
-  collaboration: "bg-red-500",
+  tools: "bg-cloud",
+  planning: "bg-cactus",
+  memory: "bg-heather",
+  concurrency: "bg-coral",
+  collaboration: "bg-fig",
 };
 
 export function Sidebar({ scenarios = [] }: { scenarios?: ScenarioMeta[] }) {
@@ -22,8 +22,10 @@ export function Sidebar({ scenarios = [] }: { scenarios?: ScenarioMeta[] }) {
   const tLayer = useTranslations("layer_labels");
 
   const startSection = locale === "zh" ? "开始" : "Start";
-  const scenariosSection = locale === "zh" ? "11 个机制（案例叙事）" : "11 mechanisms (case story)";
-  const engineeringSection = locale === "zh" ? "12 项能力（工程参考）" : "12 capabilities (engineering ref)";
+  const scenariosSection =
+    locale === "zh" ? "11 个机制（案例叙事）" : "11 mechanisms (case story)";
+  const engineeringSection =
+    locale === "zh" ? "12 项能力（工程参考）" : "12 capabilities (engineering ref)";
 
   const introItems = [
     {
@@ -36,7 +38,7 @@ export function Sidebar({ scenarios = [] }: { scenarios?: ScenarioMeta[] }) {
     },
     {
       href: `/${locale}/claude-md`,
-      label: locale === "zh" ? "CLAUDE.md" : "CLAUDE.md",
+      label: "CLAUDE.md",
     },
   ];
 
@@ -46,102 +48,70 @@ export function Sidebar({ scenarios = [] }: { scenarios?: ScenarioMeta[] }) {
 
   return (
     <nav className="hidden w-60 shrink-0 md:block">
-      <div className="sticky top-[calc(3.5rem+2rem)] max-h-[calc(100vh-5.5rem)] space-y-5 overflow-y-auto pr-1">
-        {/* Intro */}
-        <div>
-          <div className="flex items-center gap-1.5 pb-1.5">
-            <span className="h-2 w-2 rounded-full bg-zinc-400 dark:bg-zinc-500" />
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              {startSection}
-            </span>
-          </div>
-          <ul className="space-y-0.5">
-            {introItems.map((item) => {
-              const isActive =
-                pathname === item.href || pathname === `${item.href}/`;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "block rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                      isActive
-                        ? "bg-zinc-100 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                        : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
-                    )}
-                  >
-                    <span className="font-mono text-xs">→</span>
-                    <span className="ml-1.5">{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
+      <div className="sticky top-[calc(3.5rem+2rem)] max-h-[calc(100vh-5.5rem)] space-y-7 overflow-y-auto pr-1">
+        <SidebarSection label={startSection}>
+          <ul>
+            {introItems.map((item) => (
+              <SidebarItem
+                key={item.href}
+                href={item.href}
+                active={pathname === item.href || pathname === `${item.href}/`}
+                label={item.label}
+              />
+            ))}
           </ul>
-        </div>
+        </SidebarSection>
 
-        {/* 11 scenarios (case-anchored chapters) */}
         {scenarios.length > 0 && (
-          <div>
-            <Link
-              href={scenariosIndexHref}
-              className="flex items-center gap-1.5 pb-1.5 hover:underline"
-            >
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                {scenariosSection}
-              </span>
-            </Link>
-            <ul className="space-y-0.5">
+          <SidebarSection
+            label={scenariosSection}
+            href={scenariosIndexHref}
+            accentDot="bg-cactus"
+          >
+            <ul>
               {scenarios.map((s) => {
                 const href = `/${locale}/scenarios/${s.slug}`;
-                const isActive =
-                  pathname === href || pathname === `${href}/`;
+                const isActive = pathname === href || pathname === `${href}/`;
                 return (
-                  <li key={s.slug}>
-                    <Link
-                      href={href}
-                      className={cn(
-                        "block rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                        isActive
-                          ? "bg-emerald-50 font-medium text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100"
-                          : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
-                      )}
-                    >
-                      <span className="font-mono text-xs text-emerald-600/70 dark:text-emerald-400/70">
+                  <SidebarItem
+                    key={s.slug}
+                    href={href}
+                    active={isActive}
+                    label={s.title}
+                    leading={
+                      <span className="font-mono text-[10.5px] text-ink-subtle tabular-nums">
                         {s.number.padStart(2, "0")}
                       </span>
-                      <span className="ml-1.5">{s.title}</span>
-                    </Link>
-                  </li>
+                    }
+                  />
                 );
               })}
             </ul>
             {isScenariosIndexActive && (
-              <div className="mt-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+              <p className="mt-2 px-3 text-[11px] italic text-ember">
                 {locale === "zh" ? "← 索引页" : "← Index page"}
-              </div>
+              </p>
             )}
-          </div>
+          </SidebarSection>
         )}
 
-        {/* 12 sNN engineering reference, grouped by layer */}
-        <div>
-          <div className="flex items-center gap-1.5 pb-1.5">
-            <span className="h-2 w-2 rounded-full bg-zinc-400 dark:bg-zinc-500" />
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              {engineeringSection}
-            </span>
-          </div>
-          <div className="space-y-3">
+        <SidebarSection label={engineeringSection}>
+          <div className="space-y-5">
             {LAYERS.map((layer) => (
               <div key={layer.id}>
-                <div className="flex items-center gap-1.5 pb-1 pl-1">
-                  <span className={cn("h-1.5 w-1.5 rounded-full", LAYER_DOT_BG[layer.id])} />
-                  <span className="text-[10px] font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+                <div className="flex items-center gap-2 pb-1.5 pl-3">
+                  <span
+                    className={cn(
+                      "h-1.5 w-1.5 rounded-full",
+                      LAYER_DOT_BG[layer.id],
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-ink-subtle">
                     {tLayer(layer.id)}
                   </span>
                 </div>
-                <ul className="space-y-0.5">
+                <ul>
                   {layer.versions.map((vId) => {
                     const meta = VERSION_META[vId];
                     const href = `/${locale}/${vId}`;
@@ -149,30 +119,104 @@ export function Sidebar({ scenarios = [] }: { scenarios?: ScenarioMeta[] }) {
                       pathname === href ||
                       pathname === `${href}/` ||
                       pathname.startsWith(`${href}/diff`);
-
                     return (
-                      <li key={vId}>
-                        <Link
-                          href={href}
-                          className={cn(
-                            "block rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                            isActive
-                              ? "bg-zinc-100 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                              : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
-                          )}
-                        >
-                          <span className="font-mono text-xs">{vId}</span>
-                          <span className="ml-1.5">{t(vId) || meta?.title}</span>
-                        </Link>
-                      </li>
+                      <SidebarItem
+                        key={vId}
+                        href={href}
+                        active={isActive}
+                        label={t(vId) || meta?.title}
+                        leading={
+                          <span
+                            translate="no"
+                            className="font-mono text-[10.5px] text-ink-subtle tabular-nums"
+                          >
+                            {vId}
+                          </span>
+                        }
+                      />
                     );
                   })}
                 </ul>
               </div>
             ))}
           </div>
-        </div>
+        </SidebarSection>
       </div>
     </nav>
+  );
+}
+
+function SidebarSection({
+  label,
+  href,
+  accentDot,
+  children,
+}: {
+  label: string;
+  href?: string;
+  accentDot?: string;
+  children: React.ReactNode;
+}) {
+  const headerInner = (
+    <span className="flex items-center gap-2">
+      {accentDot && (
+        <span
+          aria-hidden="true"
+          className={cn("h-2 w-2 rounded-full", accentDot)}
+        />
+      )}
+      <span className="eyebrow">{label}</span>
+    </span>
+  );
+  return (
+    <div>
+      <div className="pb-2">
+        {href ? (
+          <Link
+            href={href}
+            className="inline-flex items-center transition-colors hover:text-ink"
+          >
+            {headerInner}
+          </Link>
+        ) : (
+          headerInner
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function SidebarItem({
+  href,
+  active,
+  label,
+  leading,
+}: {
+  href: string;
+  active: boolean;
+  label: string;
+  leading?: React.ReactNode;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "group relative flex items-baseline gap-2 py-1.5 pl-3 pr-2 text-[13.5px] leading-snug transition-colors",
+          active ? "text-ink" : "text-ink-muted hover:text-ink",
+        )}
+      >
+        {active && (
+          <span
+            aria-hidden="true"
+            className="absolute left-0 top-1/2 h-4 w-px -translate-y-1/2 bg-ember"
+          />
+        )}
+        {leading && <span className="shrink-0">{leading}</span>}
+        <span className="text-pretty">{label}</span>
+      </Link>
+    </li>
   );
 }
